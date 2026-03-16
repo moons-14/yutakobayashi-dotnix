@@ -45,6 +45,7 @@
       # Development
       proxyman
       tableplus
+      visual-studio-code
 
       # Media
       vlc

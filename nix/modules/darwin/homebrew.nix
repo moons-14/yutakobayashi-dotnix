@@ -10,6 +10,7 @@
     taps = [
       "blacktop/tap"
       "manaflow-ai/cmux"
+      "steipete/tap"
       "trasta298/tap"
     ];
     brews = [
@@ -74,6 +75,7 @@
       # AI / LLM
       "claude"
       "codex-app"
+      "codexbar"
 
       # VR (brew-nix のハッシュが壊れているため cask で管理)
       "virtual-desktop-streamer"
