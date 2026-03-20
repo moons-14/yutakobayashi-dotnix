@@ -73,8 +73,6 @@
     '';
   };
 
-  time.timeZone = "Asia/Tokyo";
-
   system.startup.chime = false;
 
   system.keyboard = {

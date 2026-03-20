@@ -11,6 +11,7 @@ let
     ./pretty-ts-errors-markdown.nix
     ./readout.nix
     ./similarity-ts.nix
+    ./speechrecognition.nix
     ./tree-sitter-moonbit.nix
     ./tunnelto.nix
   ];
