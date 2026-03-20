@@ -18,7 +18,6 @@ let
   };
 in
 nixpkgs.lib.nixosSystem {
-  inherit system;
   specialArgs = {
     inherit inputs;
     username = "yuta";
@@ -46,7 +45,7 @@ nixpkgs.lib.nixosSystem {
           };
           sharedModules = [
             inputs.agent-skills.homeManagerModules.default
-            inputs.nix-index-database.hmModules.nix-index
+            inputs.nix-index-database.homeModules.nix-index
           ];
           users.yuta = {
             imports = [ ../../modules/home ];

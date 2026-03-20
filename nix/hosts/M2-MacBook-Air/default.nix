@@ -44,7 +44,7 @@ nix-darwin.lib.darwinSystem {
         };
         sharedModules = [
           inputs.agent-skills.homeManagerModules.default
-          inputs.nix-index-database.hmModules.nix-index
+          inputs.nix-index-database.homeModules.nix-index
         ];
         users.yuta =
           { pkgs, ... }:

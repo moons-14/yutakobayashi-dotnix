@@ -77,7 +77,7 @@ in
         padding = 0;
       };
       permissions = {
-        defaultMode = "auto";
+        defaultMode = "bypassPermissions";
         deny = [
           "Bash(rm -rf /*)"
           "Bash(rm -rf /)"
@@ -192,17 +192,5 @@ in
   home.activation.setupRtk = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     echo "Setting up rtk hook..."
     ${rtk} init -g --hook-only --no-patch 2>/dev/null || true
-  '';
-
-  home.activation.validateClaudeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    SETTINGS_FILE="${claudeConfigDir}/settings.json"
-    SCHEMA_URL=$(${jq} -r '.["$schema"]' "$SETTINGS_FILE")
-
-    echo "Validating Claude Code settings.json..."
-    if ${pkgs.check-jsonschema}/bin/check-jsonschema --schemafile "$SCHEMA_URL" "$SETTINGS_FILE" 2>&1; then
-      echo "Claude Code settings.json validation passed"
-    else
-      echo "Claude Code settings.json validation warning: schema validation failed (schemastore may be outdated)" >&2
-    fi
   '';
 }

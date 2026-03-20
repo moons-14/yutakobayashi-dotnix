@@ -14,6 +14,7 @@
     jj-desc
 
     # Development Tools
+    actrun
     nil
     nix-init
     ni

@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "actrun-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774014789,
+        "narHash": "sha256-Nj68KMDcngiS+GGOJWsJ1uOCFbM+n19/PaIyGdGLjFw=",
+        "owner": "myuron",
+        "repo": "actrun-overlay",
+        "rev": "009fd9bc03d46112d29dd955cd9de6dcb9deb0f7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "myuron",
+        "repo": "actrun-overlay",
+        "type": "github"
+      }
+    },
     "agent-skills": {
       "inputs": {
         "home-manager": "home-manager",
@@ -1350,6 +1370,7 @@
     },
     "root": {
       "inputs": {
+        "actrun-overlay": "actrun-overlay",
         "agent-skills": "agent-skills",
         "anthropic-skills": "anthropic-skills",
         "ast-grep-skill": "ast-grep-skill",

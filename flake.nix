@@ -120,6 +120,10 @@
       url = "github:moonbit-community/moonbit-overlay";
       flake = false;
     };
+    actrun-overlay = {
+      url = "github:myuron/actrun-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     tree-sitter-moonbit = {
       url = "github:moonbitlang/tree-sitter-moonbit";
       flake = false;
@@ -189,6 +193,7 @@
             gh-nippou.overlays.default
             gh-graph.overlays.default
             inputs.rustowl-flake.overlays.default
+            inputs.actrun-overlay.overlays.default
             (import ./nix/overlays/default.nix)
           ]
           ++ nixpkgs.lib.optionals isDarwin [
@@ -210,15 +215,14 @@
       perSystem =
         {
           pkgs,
-          system,
           config,
           ...
         }:
         let
-          isDarwin = builtins.match ".*-darwin" system != null;
+          isDarwin = builtins.match ".*-darwin" pkgs.stdenv.hostPlatform.system != null;
           darwinHostname = "M2-MacBook-Air";
           nom = "${pkgs.nix-output-monitor}/bin/nom";
-          allPkgs = mkPkgs system;
+          allPkgs = mkPkgs pkgs.stdenv.hostPlatform.system;
         in
         {
           packages = {
