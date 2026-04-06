@@ -4,12 +4,12 @@
 
 ## Target
 
-| Machine           | Name              | OS                     | System         | Stable |
-| ----------------- | ----------------- | ---------------------- | -------------- | ------ |
-| UM790 Pro         | UM790-Pro         | NixOS                  | x86_64-linux   | ◎      |
-| X870 Stell Legend WiFi | X870-Stell-Legend-WiFi | NixOS (WSL)      | x86_64-linux   | ◎      |
-| M2 MacBook Air    | M2-MacBook-Air    | macOS                  | aarch64-darwin | ◎      |
-| Galaxy S23 FE     | Galaxy-S23FE      | Android (nix-on-droid) | aarch64-linux  | △      |
+| Machine                | Name                   | OS                     | System         | Stable |
+| ---------------------- | ---------------------- | ---------------------- | -------------- | ------ |
+| UM790 Pro              | UM790-Pro              | NixOS                  | x86_64-linux   | ◎      |
+| X870 Stell Legend WiFi | X870-Stell-Legend-WiFi | NixOS (WSL)            | x86_64-linux   | ◎      |
+| M2 MacBook Air         | M2-MacBook-Air         | macOS                  | aarch64-darwin | ◎      |
+| Galaxy S23 FE          | Galaxy-S23FE           | Android (nix-on-droid) | aarch64-linux  | △      |
 
 ## Module Structure
 
@@ -113,7 +113,7 @@ Claude Code skills are managed via [agent-skills-nix](https://github.com/Kyure-A
 - **External skills**: [anthropics/skills](https://github.com/anthropics/skills), [vercel-labs/skills](https://github.com/vercel-labs/skills), [ast-grep/claude-skill](https://github.com/ast-grep/claude-skill)
 - **Deploy targets**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
 
-Key skills: `social-digest`, `oura-daily-watch`, `gha-lint`, `check-similarity`, `dce` (local), `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `webapp-testing`, `skill-creator` (Anthropic), `find-skills` (Vercel), `ast-grep` (ast-grep), `ui-ux-pro-max` (community)
+Key skills: `social-digest`, `oura-daily-watch`, `repo-creator`, `gha-lint`, `check-similarity`, `dce` (local), `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `webapp-testing`, `skill-creator` (Anthropic), `find-skills` (Vercel), `ast-grep` (ast-grep), `ui-ux-pro-max` (community)
 
 ## Templates
 

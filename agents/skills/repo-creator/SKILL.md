@@ -1,10 +1,15 @@
+---
+name: repo-creator
+description: Create a new GitHub repository through the homelab OpenTofu workflow, clone it with ghq, initialize it from dev-templates, and make the initial commits.
+---
+
 Create a new repository with full scaffolding. Follow these steps exactly:
 
 ## 1. Ask Project Details
 
-Use AskUserQuestion to gather all info in one prompt:
+Gather all info in one prompt:
 
-```
+```text
 New repository setup:
 
 1. Project name? (e.g. my-app)
@@ -35,15 +40,15 @@ resource "github_repository" "<project_name>" {
 
   delete_branch_on_merge = true
 
-  license_template    = "<license>"           # e.g. "mit"
-  gitignore_template  = "<Gitignore_template>" # e.g. "Go", "Rust", "Python", "Node" — omit if no match
+  license_template    = "<license>"            # e.g. "mit"
+  gitignore_template  = "<Gitignore_template>" # e.g. "Go", "Rust", "Python", "Node"; omit if no match
 }
 ```
 
 Notes:
 
-- Resource name: use the project name with hyphens converted to underscores
-- Map the toolchain to the closest GitHub gitignore template name (e.g. go→Go, rust→Rust, python→Python, node→Node). If no match, omit `gitignore_template`.
+- Resource name: use the project name with hyphens converted to underscores.
+- Map the toolchain to the closest GitHub gitignore template name, e.g. go -> Go, rust -> Rust, python -> Python, node -> Node. If no match, omit `gitignore_template`.
 - If description is empty, omit `description`.
 
 ## 3. Apply OpenTofu
@@ -57,10 +62,10 @@ tofu apply
 
 ```bash
 ghq get yutakobayashidev/<project_name>
-cd $(ghq root)/github.com/yutakobayashidev/<project_name>
+cd "$(ghq root)/github.com/yutakobayashidev/<project_name>"
 ```
 
-Pull the generated LICENSE and .gitignore:
+Pull the generated LICENSE and `.gitignore`:
 
 ```bash
 git pull origin main

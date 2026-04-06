@@ -13,3 +13,6 @@ enabled = true
 
 [projects."/home/yuta/ghq/github.com/yutakobayashidev/dotnix"]
 trust_level = "trusted"
+
+[projects."/home/yuta/ghq/github.com/yutakobayashidev/google-apps-script"]
+trust_level = "trusted"

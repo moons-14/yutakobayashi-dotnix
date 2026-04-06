@@ -11,6 +11,7 @@
 - **デプロイ先**:
   - `~/.agents/skills`
   - `~/.config/claude/skills`
+  - `~/.config/codex/skills`
 
 ## スキルの追加
 
@@ -26,6 +27,7 @@
 - `oura-daily-watch` - Oura Ring データ + Discord行動分析
 - `markitdown` - 各種ファイル（PDF, DOCX, PPTX等）をMarkdownに変換
 - `speakerdeck` - SpeakerDeckスライド画像のダウンロード
+- `repo-creator` - GitHubリポジトリ作成ワークフロー
 
 ### Anthropic公式スキル
 

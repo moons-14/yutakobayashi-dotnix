@@ -25,7 +25,7 @@ nix flake update
 - **設定**: `nix/modules/home/agent-skills.nix`
 - **ローカルスキル**: `agents/skills/`
 - **外部スキル**: `anthropics/skills`, `vercel-labs/skills`
-- **デプロイ先**: `~/.agents/skills`, `~/.config/claude/skills`
+- **デプロイ先**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
 
 主なスキル：
 
@@ -35,6 +35,7 @@ nix flake update
 - `dce` - Dead Code Elimination（ローカル）
 - `markitdown` - 各種ファイル（PDF, DOCX, PPTX等）をMarkdownに変換（ローカル）
 - `speakerdeck` - SpeakerDeckスライド画像のダウンロード（ローカル）
+- `repo-creator` - GitHubリポジトリ作成ワークフロー（ローカル）
 - `docx`, `pdf`, `pptx`, `xlsx` - ドキュメント処理（Anthropic）
 - `frontend-design`, `skill-creator`, `webapp-testing` - 開発支援（Anthropic）
 - `find-skills` - スキル検索・発見支援（Vercel）
