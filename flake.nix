@@ -296,6 +296,8 @@
               nixfmt.enable = true;
               stylua.enable = true;
               shfmt.enable = true;
+              taplo.enable = true;
+              ruff-format.enable = true;
               oxfmt = {
                 enable = true;
                 excludes = [

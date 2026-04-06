@@ -68,13 +68,13 @@ nix flake update
 
 - `nix run .#switch` - Build and apply NixOS + Home Manager configuration (`sudo nixos-rebuild switch`)
 - `nix run .#build` - Build configuration without applying
-- `nix run .#fmt` - Format all files (nix, lua, sh) via [treefmt](https://github.com/numtide/treefmt-nix)
+- `nix run .#fmt` - Format configured file types (Nix, Lua, shell, TOML, Python, etc.) via [treefmt](https://github.com/numtide/treefmt-nix)
 
 ### macOS
 
 - `nix run .#switch` - Build and apply nix-darwin + Home Manager configuration (`darwin-rebuild switch`)
 - `nix run .#build` - Build configuration without applying
-- `nix run .#fmt` - Format all files (nix, lua, sh) via [treefmt](https://github.com/numtide/treefmt-nix)
+- `nix run .#fmt` - Format configured file types (Nix, Lua, shell, TOML, Python, etc.) via [treefmt](https://github.com/numtide/treefmt-nix)
 
 Both use [nix-output-monitor](https://github.com/maralorn/nix-output-monitor) for build output.
 

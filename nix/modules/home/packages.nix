@@ -18,6 +18,8 @@
     nil
     nix-init
     ni
+    ruff
+    taplo
     wabt
 
     # CLI Utilities

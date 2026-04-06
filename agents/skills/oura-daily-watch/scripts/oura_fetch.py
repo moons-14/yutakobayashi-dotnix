@@ -60,7 +60,12 @@ def main():
 
     token = os.getenv("OURA_PERSONAL_ACCESS_TOKEN")
     if not token:
-        print(json.dumps({"ok": False, "error": "OURA_PERSONAL_ACCESS_TOKEN is not set"}, ensure_ascii=False))
+        print(
+            json.dumps(
+                {"ok": False, "error": "OURA_PERSONAL_ACCESS_TOKEN is not set"},
+                ensure_ascii=False,
+            )
+        )
         sys.exit(1)
 
     tz = ZoneInfo(args.tz)
@@ -80,7 +85,9 @@ def main():
         readiness = _fetch_daily("daily_readiness", start_s, end_s, token)
         activity = _fetch_daily("daily_activity", start_s, end_s, token)
     except Exception as e:
-        print(json.dumps({"ok": False, "error": f"fetch failed: {e}"}, ensure_ascii=False))
+        print(
+            json.dumps({"ok": False, "error": f"fetch failed: {e}"}, ensure_ascii=False)
+        )
         sys.exit(2)
 
     by_day = {
@@ -106,21 +113,49 @@ def main():
     rhr = _pick(today_readiness, "contributors", "resting_heart_rate", "value")
     hrv = _pick(today_readiness, "contributors", "hrv_balance", "value")
 
-    prev_days = [(target - dt.timedelta(days=i)).isoformat() for i in range(1, baseline_days + 1)]
+    prev_days = [
+        (target - dt.timedelta(days=i)).isoformat() for i in range(1, baseline_days + 1)
+    ]
 
     b_sleep = _avg([_pick(by_day["sleep"].get(d, {}), "score") for d in prev_days])
-    b_readiness = _avg([_pick(by_day["readiness"].get(d, {}), "score") for d in prev_days])
-    b_activity = _avg([_pick(by_day["activity"].get(d, {}), "score") for d in prev_days])
-    b_rhr = _avg([_pick(by_day["readiness"].get(d, {}), "contributors", "resting_heart_rate", "value") for d in prev_days])
+    b_readiness = _avg(
+        [_pick(by_day["readiness"].get(d, {}), "score") for d in prev_days]
+    )
+    b_activity = _avg(
+        [_pick(by_day["activity"].get(d, {}), "score") for d in prev_days]
+    )
+    b_rhr = _avg(
+        [
+            _pick(
+                by_day["readiness"].get(d, {}),
+                "contributors",
+                "resting_heart_rate",
+                "value",
+            )
+            for d in prev_days
+        ]
+    )
 
     flags = []
-    if isinstance(readiness_score, (int, float)) and isinstance(b_readiness, (int, float)) and readiness_score <= b_readiness - 10:
+    if (
+        isinstance(readiness_score, (int, float))
+        and isinstance(b_readiness, (int, float))
+        and readiness_score <= b_readiness - 10
+    ):
         flags.append("READINESS_DROP")
-    if isinstance(sleep_score, (int, float)) and isinstance(b_sleep, (int, float)) and sleep_score <= b_sleep - 10:
+    if (
+        isinstance(sleep_score, (int, float))
+        and isinstance(b_sleep, (int, float))
+        and sleep_score <= b_sleep - 10
+    ):
         flags.append("SLEEP_SCORE_DROP")
     if isinstance(total_sleep_sec, (int, float)) and total_sleep_sec < 6 * 3600:
         flags.append("SHORT_SLEEP")
-    if isinstance(rhr, (int, float)) and isinstance(b_rhr, (int, float)) and rhr >= b_rhr + 5:
+    if (
+        isinstance(rhr, (int, float))
+        and isinstance(b_rhr, (int, float))
+        and rhr >= b_rhr + 5
+    ):
         flags.append("RHR_SPIKE")
 
     out = {
@@ -135,10 +170,18 @@ def main():
             "hrv_balance": hrv,
         },
         "baseline": {
-            "readiness_score_7d": round(b_readiness, 2) if isinstance(b_readiness, (int, float)) else None,
-            "sleep_score_7d": round(b_sleep, 2) if isinstance(b_sleep, (int, float)) else None,
-            "activity_score_7d": round(b_activity, 2) if isinstance(b_activity, (int, float)) else None,
-            "resting_heart_rate_7d": round(b_rhr, 2) if isinstance(b_rhr, (int, float)) else None,
+            "readiness_score_7d": round(b_readiness, 2)
+            if isinstance(b_readiness, (int, float))
+            else None,
+            "sleep_score_7d": round(b_sleep, 2)
+            if isinstance(b_sleep, (int, float))
+            else None,
+            "activity_score_7d": round(b_activity, 2)
+            if isinstance(b_activity, (int, float))
+            else None,
+            "resting_heart_rate_7d": round(b_rhr, 2)
+            if isinstance(b_rhr, (int, float))
+            else None,
         },
         "flags": flags,
     }
