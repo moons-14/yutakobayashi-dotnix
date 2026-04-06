@@ -33,6 +33,8 @@ nixpkgs.lib.nixosSystem {
     (
       { pkgs, ... }:
       {
+        environment.systemPackages = [ pkgs.xdg-utils ];
+
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
@@ -51,6 +53,24 @@ nixpkgs.lib.nixosSystem {
           users.yuta = {
             imports = [ ../../modules/home ];
             home.homeDirectory = "/home/yuta";
+            home.file.".local/share/applications/file-protocol-handler.desktop".text = ''
+              [Desktop Entry]
+              Type=Application
+              Version=1.0
+              Name=File Protocol Handler
+              NoDisplay=true
+              MimeType=x-scheme-handler/http;x-scheme-handler/https;
+              Exec=rundll32.exe url.dll,FileProtocolHandler %u
+            '';
+            xdg.configFile."mimeapps.list".text = ''
+              [Default Applications]
+              x-scheme-handler/http=file-protocol-handler.desktop
+              x-scheme-handler/https=file-protocol-handler.desktop
+
+              [Added Associations]
+              x-scheme-handler/http=file-protocol-handler.desktop;
+              x-scheme-handler/https=file-protocol-handler.desktop;
+            '';
           };
         };
       }

@@ -71,4 +71,12 @@
    sudo nixos-rebuild switch --flake .#X870-Stell-Legend-WiFi
    ```
 
-3. If you want `nix run .#build` and `nix run .#switch` to work on this machine, make sure the runtime hostname is `X870-Stell-Legend-WiFi`.
+3. This host config also installs `xdg-open` and registers a local `file-protocol-handler.desktop` entry so WSL can forward browser opens to the Windows default browser.
+
+   ```sh
+   xdg-open https://example.com
+   ```
+
+   This also lets commands such as `gh auth login` open `https://github.com/login/device` in the Windows browser.
+
+4. If you want `nix run .#build` and `nix run .#switch` to work on this machine, make sure the runtime hostname is `X870-Stell-Legend-WiFi`.
