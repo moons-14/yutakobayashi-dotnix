@@ -2,7 +2,7 @@
 # https://github.com/Kyure-A/agent-skills-nix
 #
 # All skills (local and external) are managed here via agent-skills-nix.
-# Skills are deployed to ~/.agents (standard location) and ~/.config/claude/skills
+# Skills are deployed to enabled agent-skills-nix built-in targets.
 {
   pkgs,
   inputs,
@@ -127,23 +127,11 @@
       };
     };
 
-    # Deploy to standard skills directories
+    # Deploy to built-in target directories.
     targets = {
-      # Standard ~/.agents/skills directory
-      agents = {
-        dest = ".agents/skills";
-        structure = "link";
-      };
-      # Claude Code user config
-      claude = {
-        dest = ".config/claude/skills";
-        structure = "link";
-      };
-      # Codex CLI user config (XDG: ~/.config/codex/skills)
-      codex = {
-        dest = ".config/codex/skills";
-        structure = "link";
-      };
+      agents.enable = true;
+      claude.enable = true;
+      codex.enable = true;
     };
   };
 }
