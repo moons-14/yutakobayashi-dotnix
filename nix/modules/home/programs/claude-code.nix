@@ -66,6 +66,7 @@ in
         "gopls-lsp@claude-plugins-official" = true;
       };
       cleanupPeriodDays = 876000;
+      includeCoAuthoredBy = false;
       language = "Japanese";
       skipDangerousModePermissionPrompt = true;
       enableAllProjectMcpServers = true;
@@ -77,7 +78,7 @@ in
         padding = 0;
       };
       permissions = {
-        defaultMode = "bypassPermissions";
+        defaultMode = "auto";
         deny = [
           "Bash(rm -rf /*)"
           "Bash(rm -rf /)"

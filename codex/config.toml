@@ -1,0 +1,15 @@
+approval_policy = "on-request"
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+personality = "pragmatic"
+project_doc_fallback_filenames = ["CLAUDE.md"]
+web_search_request = true
+
+[mcp_servers.deepwiki]
+url = "https://mcp.deepwiki.com/mcp"
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[projects."/home/yuta/ghq/github.com/yutakobayashidev/dotnix"]
+trust_level = "trusted"

@@ -7,15 +7,6 @@
 
 let
   codexDotfilesDir = "${dotfilesDir}/codex";
-  tomlFormat = pkgs.formats.toml { };
-
-  settings = {
-    model = "gpt-5.3-codex";
-    approval_policy = "on-request";
-    model_reasoning_effort = "high";
-    web_search_request = true;
-    project_doc_fallback_filenames = [ "CLAUDE.md" ];
-  };
 in
 {
   home.packages = [ pkgs.llm-agents.codex ];
@@ -24,7 +15,8 @@ in
     CODEX_HOME = "${config.xdg.configHome}/codex";
   };
 
-  xdg.configFile."codex/config.toml".source = tomlFormat.generate "codex-config.toml" settings;
+  xdg.configFile."codex/config.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${codexDotfilesDir}/config.toml";
 
   xdg.configFile."codex/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${codexDotfilesDir}/AGENTS.md";
