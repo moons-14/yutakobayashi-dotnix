@@ -7,7 +7,8 @@
 2. Clone this repository:
 
    ```sh
-   git clone https://github.com/yutakobayashidev/dotnix.git ~/ghq/github.com/yutakobayashidev/dotnix
+   mkdir -p ~/ghq/github.com/yutakobayashidev
+   nix shell nixpkgs#git -c git clone https://github.com/yutakobayashidev/dotnix.git ~/ghq/github.com/yutakobayashidev/dotnix
    cd ~/ghq/github.com/yutakobayashidev/dotnix
    ```
 

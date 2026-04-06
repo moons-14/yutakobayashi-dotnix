@@ -7,7 +7,7 @@
 | Machine           | Name              | OS                     | System         | Stable |
 | ----------------- | ----------------- | ---------------------- | -------------- | ------ |
 | UM790 Pro         | UM790-Pro         | NixOS                  | x86_64-linux   | ◎      |
-| Still Legend x870 | Still-Legend-x870 | NixOS (WSL)            | x86_64-linux   | △      |
+| X870 Stell Legend WiFi | X870-Stell-Legend-WiFi | NixOS (WSL)      | x86_64-linux   | ◎      |
 | M2 MacBook Air    | M2-MacBook-Air    | macOS                  | aarch64-darwin | ◎      |
 | Galaxy S23 FE     | Galaxy-S23FE      | Android (nix-on-droid) | aarch64-linux  | △      |
 
@@ -18,7 +18,7 @@ flake.nix                    # Entry point (nixos + darwin + nixOnDroid Configur
 ├── nix/
 │   ├── hosts/
 │   │   ├── UM790-Pro/           # NixOS host config (boot, network, locale)
-│   │   ├── Still-Legend-x870/   # NixOS-WSL host config (WSL, locale)
+│   │   ├── X870-Stell-Legend-WiFi/   # NixOS-WSL host config (WSL, locale)
 │   │   ├── M2-MacBook-Air/      # macOS host config
 │   │   └── Galaxy-S23FE/        # nix-on-droid host config
 │   ├── profiles/
@@ -42,7 +42,7 @@ flake.nix                    # Entry point (nixos + darwin + nixOnDroid Configur
 ## Documentation
 
 - [docs/UM790Pro.md](docs/UM790Pro.md) - NixOS installation guide
-- [docs/Still-Legend-x870.md](docs/Still-Legend-x870.md) - NixOS-WSL installation guide
+- [docs/X870-Stell-Legend-WiFi.md](docs/X870-Stell-Legend-WiFi.md) - NixOS-WSL installation guide
 - [docs/M2-MacBook-Air.md](docs/M2-MacBook-Air.md) - nix-darwin installation guide for macOS
 - [docs/Galaxy-S23FE.md](docs/Galaxy-S23FE.md) - nix-on-droid installation guide for Android
 

@@ -1,4 +1,4 @@
-# Still-Legend-x870 WSL ホスト固有の設定
+# X870-Stell-Legend-WiFi WSL ホスト固有の設定
 { ... }:
 
 {
@@ -7,7 +7,7 @@
   wsl.defaultUser = "yuta";
 
   # Networking
-  networking.hostName = "Still-Legend-x870";
+  networking.hostName = "X870-Stell-Legend-WiFi";
 
   system.stateVersion = "25.11";
 }

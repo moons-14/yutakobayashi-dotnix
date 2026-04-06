@@ -337,7 +337,7 @@
       flake = {
         nixosConfigurations = {
           UM790-Pro = import ./nix/hosts/UM790-Pro { inherit inputs mkPkgs; };
-          Still-Legend-x870 = import ./nix/hosts/Still-Legend-x870 { inherit inputs mkPkgs; };
+          X870-Stell-Legend-WiFi = import ./nix/hosts/X870-Stell-Legend-WiFi { inherit inputs mkPkgs; };
         };
 
         darwinConfigurations = {

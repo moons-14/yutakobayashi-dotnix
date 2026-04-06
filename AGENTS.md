@@ -58,7 +58,7 @@ flake.nix                          # エントリポイント
 │   │   ├── UM790-Pro/             # NixOS (x86_64-linux)
 │   │   │   ├── default.nix        # モジュール構成
 │   │   │   └── hardware-configuration.nix  # boot, network, hardware, logind
-│   │   ├── Still-Legend-x870/     # NixOS-WSL (x86_64-linux)
+│   │   ├── X870-Stell-Legend-WiFi/ # NixOS-WSL (x86_64-linux)
 │   │   │   ├── default.nix        # モジュール構成
 │   │   │   └── hardware-configuration.nix  # WSL設定, hostname
 │   │   └── M2-MacBook-Air/        # macOS (aarch64-darwin)

@@ -29,9 +29,9 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 ## Step 4: Clone Configuration
 
 ```sh
-nix-shell -p git
-git clone https://github.com/yutakobayashidev/dotnix.git
-cd dotnix
+mkdir -p ~/ghq/github.com/yutakobayashidev
+nix shell nixpkgs#git -c git clone https://github.com/yutakobayashidev/dotnix.git ~/ghq/github.com/yutakobayashidev/dotnix
+cd ~/ghq/github.com/yutakobayashidev/dotnix
 ```
 
 ## Step 5: Apply Configuration
