@@ -20,14 +20,18 @@
     # Browsers & Communication (Nix管理)
     google-chrome
     discord
+    signal-desktop
     slack
 
     # Productivity (Nix管理)
     stable.anki
     _1password-gui
     insomnia
+    libreoffice
+    nextcloud-client
 
     # Media
+    kooha
     spotify
 
     # Wayland Tools
@@ -50,10 +54,15 @@
     arp-scan
 
     # VR
+    alcom
     vrcx
+
+    # AI / LLM
+    lmstudio
 
     # Misc
     cava
+    nautilus
   ];
 
   programs.obs-studio = {

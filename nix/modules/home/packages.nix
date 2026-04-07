@@ -49,7 +49,10 @@
     python313Packages.markitdown
     stable.yt-dlp
     halloy
+    immich-go
+    nostui
     obsidian
+    unar
 
     # Network Tools
     tunnelto
@@ -57,6 +60,8 @@
     bandwhich
     nmap
     dnsutils
+    proton-vpn-cli
+    wireguard-tools
 
     # Presentation
     pdfpc
