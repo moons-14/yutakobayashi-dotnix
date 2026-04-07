@@ -88,6 +88,10 @@ agent-browser screenshot z-ai/screenshot.png
 agent-browser open <url> --profile ~/.browser-profile --allow-private
 ```
 
+## Link Handling
+
+- When the user provides an `x.com` or `twitter.com` status link, you can use `https://api.fxtwitter.com/:screen_name?/status/:id` to fetch tweet/post data.
+
 ## Core Principles
 
 - **Simplicity First**: Make every change as simple as possible. Impact minimal code.
