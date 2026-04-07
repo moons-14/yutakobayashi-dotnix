@@ -33,7 +33,7 @@ nixpkgs.lib.nixosSystem {
     (
       { pkgs, ... }:
       {
-        environment.systemPackages = [ pkgs.xdg-utils ];
+        environment.systemPackages = [ pkgs.cudatoolkit ];
 
         home-manager = {
           useGlobalPkgs = true;
@@ -53,6 +53,7 @@ nixpkgs.lib.nixosSystem {
           users.yuta = {
             imports = [ ../../modules/home ];
             home.homeDirectory = "/home/yuta";
+            home.packages = [ pkgs.xdg-utils ];
             home.file.".local/share/applications/file-protocol-handler.desktop".text = ''
               [Desktop Entry]
               Type=Application
