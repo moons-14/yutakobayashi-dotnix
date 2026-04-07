@@ -28,6 +28,7 @@
     insomnia
 
     # Media
+    obs-studio
     spotify
 
     # Wayland Tools

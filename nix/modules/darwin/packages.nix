@@ -48,6 +48,7 @@
       visual-studio-code
 
       # Media
+      obs
       vlc
       ogdesign-eagle
 
