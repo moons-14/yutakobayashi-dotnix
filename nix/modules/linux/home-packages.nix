@@ -43,6 +43,7 @@
     brightnessctl
 
     # System Tools
+    kubo
     rpi-imager
     difit
     binutils

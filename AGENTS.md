@@ -88,6 +88,7 @@ flake.nix                          # エントリポイント
 │   │   │   ├── ssh.nix
 │   │   │   ├── printing.nix       # CUPS printing
 │   │   │   ├── locale.nix          # i18n/タイムゾーン共通設定
+│   │   │   ├── ipfs.nix            # Kubo/IPFS daemon
 │   │   │   └── programs/          # Linux固有home-managerプログラム
 │   │   │       ├── firefox.nix    # Firefox profile/search設定
 │   │   │       ├── niri.nix       # Niri home設定

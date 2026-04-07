@@ -62,6 +62,7 @@
       arduino-ide
 
       # Other
+      ipfs-desktop
       sidequest
       zoom
     ]);

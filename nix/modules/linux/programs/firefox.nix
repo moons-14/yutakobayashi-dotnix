@@ -10,6 +10,7 @@
         wappalyzer
         nos2x-fox
         metamask
+        ipfs-companion
         are-na
         web-clipper-obsidian
       ];
