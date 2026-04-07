@@ -18,6 +18,8 @@
    sudo nixos-rebuild switch --flake .#UM790-Pro
    ```
 
+   VirtualBox is enabled on this host. Log out and back in after the first switch so the `vboxusers` group is applied to your session.
+
 ## YubiKey Setup
 
 YubiKeyでpolkit認証（1Passwordのロック解除など）を行うための設定。

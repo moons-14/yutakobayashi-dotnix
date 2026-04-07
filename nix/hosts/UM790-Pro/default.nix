@@ -30,6 +30,13 @@ nixpkgs.lib.nixosSystem {
     { nixpkgs.pkgs = mkPkgs system; }
     nix-hazkey.nixosModules.hazkey
     (
+      { username, ... }:
+      {
+        virtualisation.virtualbox.host.enable = true;
+        users.users.${username}.extraGroups = [ "vboxusers" ];
+      }
+    )
+    (
       { pkgs, ... }:
       {
         home-manager = {

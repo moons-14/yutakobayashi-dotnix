@@ -135,7 +135,7 @@ flake.nix                          # エントリポイント
 - **WM**: Niri（スクロール可能なタイリングWM）
 - **IME**: fcitx5 + hazkey（LLM変換）
 - **YubiKey**: PAM U2F認証サポート（polkit, swaylock対応）
-- **Development**: Docker, Tailscale, Android開発環境
+- **Development**: Docker, Tailscale, Android開発環境、UM790-ProのVirtualBox
 
 ### macOS
 
