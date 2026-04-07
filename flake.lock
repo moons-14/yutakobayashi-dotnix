@@ -190,6 +190,28 @@
         "type": "github"
       }
     },
+    "firefox-addons": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1775534587,
+        "narHash": "sha256-OLAoGTTwPVTH13C1e2Vcdff4WigTsk6hO5Y3sEcwl/s=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "9f1e4b7f5443c50cb4ccc2a376ba1058231e64b4",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -1378,6 +1400,7 @@
         "brew-api": "brew-api",
         "brew-nix": "brew-nix",
         "deno-skills": "deno-skills",
+        "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "gh-graph": "gh-graph",
         "gh-nippou": "gh-nippou",

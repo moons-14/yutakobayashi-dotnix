@@ -1,0 +1,39 @@
+{ pkgs, ... }:
+
+{
+  programs.firefox = {
+    enable = true;
+
+    profiles.nix = {
+      extensions.packages = with pkgs.firefox-addons; [
+        onepassword-password-manager
+        wappalyzer
+        nos2x-fox
+        metamask
+      ];
+
+      isDefault = true;
+
+      settings = {
+        "browser.toolbars.bookmarks.visibility" = "always";
+      };
+
+      search = {
+        default = "DuckDuckGo Lite";
+
+        engines = {
+          "DuckDuckGo Lite" = {
+            urls = [
+              {
+                template = "https://lite.duckduckgo.com/lite/?q={searchTerms}";
+              }
+            ];
+            icon = "https://duckduckgo.com/favicon.ico";
+          };
+        };
+
+        force = true;
+      };
+    };
+  };
+}

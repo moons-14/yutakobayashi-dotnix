@@ -35,6 +35,10 @@
       url = "github:aster-void/nix-hazkey";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agent-skills = {
       url = "github:Kyure-A/agent-skills-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -194,6 +198,7 @@
             gh-graph.overlays.default
             inputs.rustowl-flake.overlays.default
             inputs.actrun-overlay.overlays.default
+            inputs.firefox-addons.overlays.default
             (import ./nix/overlays/default.nix)
           ]
           ++ nixpkgs.lib.optionals isDarwin [

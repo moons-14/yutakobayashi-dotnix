@@ -72,7 +72,7 @@ flake.nix                          # エントリポイント
 │   ├── modules/
 │   │   ├── linux/                 # NixOS/Linuxシステムモジュール
 │   │   │   ├── default.nix
-│   │   │   ├── packages.nix       # システムパッケージ（firefox, zsh, nix-ld）
+│   │   │   ├── packages.nix       # システムパッケージ（zsh, nix-ld）
 │   │   │   ├── nix.nix            # Nix設定
 │   │   │   ├── user.nix           # ユーザー設定 + home-manager統合
 │   │   │   ├── home-packages.nix  # Linux固有ユーザーパッケージ
@@ -86,8 +86,10 @@ flake.nix                          # エントリポイント
 │   │   │   ├── android.nix
 │   │   │   ├── fonts.nix
 │   │   │   ├── ssh.nix
+│   │   │   ├── printing.nix       # CUPS printing
 │   │   │   ├── locale.nix          # i18n/タイムゾーン共通設定
 │   │   │   └── programs/          # Linux固有home-managerプログラム
+│   │   │       ├── firefox.nix    # Firefox profile/search設定
 │   │   │       ├── niri.nix       # Niri home設定
 │   │   │       ├── waybar.nix
 │   │   │       ├── swayidle.nix

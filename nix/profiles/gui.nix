@@ -9,13 +9,11 @@
     ./../modules/linux/bluetooth.nix
     ./../modules/linux/android.nix
     ./../modules/linux/networking.nix
+    ./../modules/linux/printing.nix
   ];
 
-  services.printing.enable = true;
-
-  programs.firefox.enable = true;
-
   home-manager.users.yuta.imports = [
+    ./../modules/linux/programs/firefox.nix
     ./../modules/linux/programs/niri.nix
     ./../modules/linux/programs/waybar.nix
     ./../modules/home/programs/ghostty
