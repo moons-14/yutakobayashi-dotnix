@@ -228,6 +228,7 @@
           packages = {
             inherit (allPkgs)
               difit
+              git-now
               jj-desc
               keifu
               polycat

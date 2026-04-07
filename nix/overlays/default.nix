@@ -4,6 +4,7 @@ let
     ./continues.nix
     ./dev-tools.nix
     ./difit.nix
+    ./git-now.nix
     ./jj-desc.nix
     ./keifu.nix
     ./opensrc.nix
