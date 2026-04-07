@@ -60,6 +60,10 @@
     enable = true;
     plugins = with pkgs.obs-studio-plugins; [
       droidcam-obs
+      obs-backgroundremoval
+      obs-gstreamer
+      obs-pipewire-audio-capture
+      wlrobs
     ];
   };
 }
