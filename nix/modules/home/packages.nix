@@ -6,6 +6,7 @@
     # Version Control
     bit-vcs
     git
+    git-now
     git-wt
     git-lfs
     git-filter-repo
