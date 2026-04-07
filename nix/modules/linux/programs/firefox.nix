@@ -10,6 +10,8 @@
         wappalyzer
         nos2x-fox
         metamask
+        are-na
+        web-clipper-obsidian
       ];
 
       isDefault = true;
