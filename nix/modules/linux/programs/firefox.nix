@@ -11,6 +11,7 @@
         nos2x-fox
         metamask
         ipfs-companion
+        keepa
         are-na
         web-clipper-obsidian
       ];
