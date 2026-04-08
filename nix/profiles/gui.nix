@@ -13,7 +13,6 @@
   ];
 
   home-manager.users.yuta.imports = [
-    ./../modules/linux/programs/firefox.nix
     ./../modules/linux/programs/niri.nix
     ./../modules/linux/programs/waybar.nix
     ./../modules/home/programs/ghostty

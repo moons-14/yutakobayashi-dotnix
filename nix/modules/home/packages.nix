@@ -1,73 +1,87 @@
 # home-managerの共通パッケージリスト（Linux/macOS共通）
 { pkgs, lib, ... }:
 
+let
+  immich-go = pkgs.symlinkJoin {
+    name = "immich-go-no-docs";
+    paths = [ pkgs.immich-go ];
+    postBuild = ''
+      rm -f $out/bin/docs
+    '';
+  };
+in
+
 {
-  home.packages = with pkgs; [
-    # Version Control
-    bit-vcs
-    git
-    git-now
-    git-wt
-    git-lfs
-    git-filter-repo
-    lazygit
-    jujutsu
-    jj-desc
+  home.packages =
+    with pkgs;
+    [
+      # Version Control
+      bit-vcs
+      git
+      git-now
+      git-wt
+      git-lfs
+      git-filter-repo
+      lazygit
+      jujutsu
+      jj-desc
 
-    # Development Tools
-    actrun
-    nil
-    nix-init
-    ni
-    ruff
-    taplo
-    wabt
+      # Development Tools
+      actrun
+      nil
+      nix-init
+      ni
+      ruff
+      taplo
+      wabt
 
-    # CLI Utilities
-    curl
-    wget
-    aria2
-    xh
-    ripgrep
-    fzf
-    peco
-    jq
-    jnv
-    tokei
-    cloc
-    similarity-ts
-    lsd
-    btop
-    zoxide
-    tree
-    glow
-    gum
-    vhs
-    yazi
-    imagemagick
-    ffmpeg
-    python313Packages.markitdown
-    stable.yt-dlp
-    halloy
-    immich-go
-    nostui
-    obsidian
-    unar
+      # CLI Utilities
+      curl
+      wget
+      aria2
+      xh
+      ripgrep
+      fzf
+      peco
+      jq
+      jnv
+      tokei
+      cloc
+      similarity-ts
+      lsd
+      btop
+      zoxide
+      tree
+      glow
+      gum
+      vhs
+      yazi
+      imagemagick
+      ffmpeg
+      python313Packages.markitdown
+      stable.yt-dlp
+      halloy
+      immich-go
+      nostui
+      obsidian
+      unar
 
-    # Network Tools
-    tunnelto
-    speedtest-cli
-    bandwhich
-    nmap
-    dnsutils
-    proton-vpn-cli
-    wireguard-tools
+      # Network Tools
+      tunnelto
+      speedtest-cli
+      bandwhich
+      nmap
+      dnsutils
+      wireguard-tools
 
-    # Presentation
-    pdfpc
+      # Presentation
+      pdfpc
 
-    # Misc
-    sl
-    fastfetch
-  ];
+      # Misc
+      sl
+      fastfetch
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
+      proton-vpn-cli
+    ];
 }
