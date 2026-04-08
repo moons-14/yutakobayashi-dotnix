@@ -53,8 +53,10 @@
       "orbstack"
       "tailscale-app"
       "blackhole-2ch"
-
+      "nani"
+      "telegram"
       # Browsers (システム統合が深い)
+      "chromium"
       "google-chrome"
 
       # Complex Installers (pkg/独自インストーラー)
@@ -69,6 +71,7 @@
       "qmk-toolbox"
 
       # Media (brew-nix のビルドが壊れているため cask で管理)
+      "obs"
       "krita"
       "spotify"
 

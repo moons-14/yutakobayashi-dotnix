@@ -26,11 +26,9 @@
       discord
       element
       mattermost
-      # nani # TODO: upstream download URL returns 404
       signal
       simplex
       slack
-      telegram
       wechat
 
       # AI / LLM
@@ -39,6 +37,7 @@
       # Productivity
       anki
       figma
+      synthesia
       linear-linear
       notion-calendar
 
@@ -48,7 +47,6 @@
       visual-studio-code
 
       # Media
-      obs
       vlc
       ogdesign-eagle
 

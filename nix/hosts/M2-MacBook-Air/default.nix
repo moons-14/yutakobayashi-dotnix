@@ -32,6 +32,7 @@ nix-darwin.lib.darwinSystem {
       imports = [ home-manager.darwinModules.home-manager ];
 
       home-manager = {
+        backupFileExtension = "hm-bak";
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {
