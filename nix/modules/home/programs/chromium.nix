@@ -13,6 +13,7 @@
       { id = "kpgefcfmnafjgpblomihpgmejjdanjjp"; } # nos2x
       { id = "fcoeoabgfenejglbffodgkkbkcdhcgfn"; } # Claude
       { id = "lkihjlcipnbgeokmfnpogjfflofbfhga"; } # Are.na
+      { id = "opfckbclghgjapgbpncggbllfpiegnbm"; } # Miro
       { id = "nkbihfbeogaeaoehlefnkodbefgpgknn"; } # MetaMask
       { id = "nibjojkomfdiaoajekhjakgkdhaomnch"; } # IPFS Companion
       { id = "neebplgakaahbhdphmkckjjcegoiijjo"; } # Keepa
