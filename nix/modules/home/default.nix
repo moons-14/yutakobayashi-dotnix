@@ -10,6 +10,7 @@
     ./programs/codex.nix
     ./programs/git.nix
     ./programs/jj.nix
+    ./programs/obs-studio.nix
     ./programs/zsh.nix
   ];
 
