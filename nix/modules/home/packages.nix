@@ -37,6 +37,7 @@ in
 
       # CLI Utilities
       curl
+      curl-impersonate
       wget
       aria2
       xh
