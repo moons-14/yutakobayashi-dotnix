@@ -5,6 +5,11 @@
   # WSL settings
   wsl.enable = true;
   wsl.defaultUser = "yuta";
+  wsl.wslConf = {
+    automount.options = "metadata";
+    boot.systemd = true;
+  };
+  wsl.useWindowsDriver = true;
 
   # Networking
   networking.hostName = "X870-Stell-Legend-WiFi";
