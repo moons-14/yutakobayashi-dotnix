@@ -82,6 +82,7 @@
       "windows-app"
 
       # VR (brew-nix のハッシュが壊れているため cask で管理)
+      "unity-hub"
       "virtual-desktop-streamer"
 
       # Other
