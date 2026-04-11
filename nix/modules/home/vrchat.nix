@@ -5,14 +5,21 @@
   home.packages =
     (with pkgs; [
       vrc-get
-      alcom
-      blender
     ])
     ++ lib.optionals pkgs.stdenv.isLinux (
       with pkgs;
       [
+        alcom
+        blender
         unityhub
         vrcx
+      ]
+    )
+    ++ lib.optionals pkgs.stdenv.isDarwin (
+      with pkgs.brewCasks;
+      [
+        alcom
+        blender
       ]
     );
 }
