@@ -53,10 +53,6 @@
     binutils
     arp-scan
 
-    # VR
-    alcom
-    vrcx
-
     # AI / LLM
     lmstudio
 

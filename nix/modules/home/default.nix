@@ -4,6 +4,7 @@
   imports = [
     ./dotfiles.nix
     ./agent-skills.nix
+    ./vrchat.nix
     ./programs/ai-tools.nix
     ./programs/dev-tools.nix
     ./programs/claude-code.nix

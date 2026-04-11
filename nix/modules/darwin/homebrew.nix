@@ -79,6 +79,7 @@
       "claude"
       "codex-app"
       "codexbar"
+      "windows-app"
 
       # VR (brew-nix のハッシュが壊れているため cask で管理)
       "virtual-desktop-streamer"
