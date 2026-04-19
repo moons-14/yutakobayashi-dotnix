@@ -18,7 +18,6 @@ let
   };
 in
 nix-darwin.lib.darwinSystem {
-  inherit system;
   specialArgs = {
     inherit inputs;
     username = "yuta";

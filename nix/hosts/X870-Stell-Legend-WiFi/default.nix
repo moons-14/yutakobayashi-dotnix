@@ -18,7 +18,6 @@ let
   };
 in
 nixpkgs.lib.nixosSystem {
-  inherit system;
   specialArgs = {
     inherit inputs;
     username = "yuta";

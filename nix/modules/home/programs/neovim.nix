@@ -20,6 +20,8 @@ in
     vimAlias = true;
     defaultEditor = true;
     withNodeJs = true;
+    withRuby = false;
+    withPython3 = false;
 
     extraPackages = with pkgs; [
       prettierd
