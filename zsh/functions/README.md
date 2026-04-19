@@ -13,6 +13,7 @@
 | `difit-cmux` | cmux でフォーカス中ディレクトリの `difit` を split 表示 | `difit-cmux`                 |
 | `g`          | 引数なし: ghq+peco でリポジトリ移動、引数あり: git      | `g [git args]`               |
 | `gb`         | fzf でブランチを検索・チェックアウト                    | `gb`                         |
+| `gifit`      | fzf でコミット範囲を選んで `difit` を実行               | `gifit`                      |
 | `gh-q`       | GitHub リポジトリを検索・clone                          | `gh-q [-o] [owner]`          |
 | `gwt`        | fzf で git worktree を検索・移動                        | `gwt`                        |
 | `jb`         | fzf で jj bookmark を選択・new                          | `jb`                         |
