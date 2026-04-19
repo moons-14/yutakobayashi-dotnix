@@ -80,7 +80,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nur-packages = {
-      url = "path:../nur-packages";
+      url = "github:yutakobayashidev/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
