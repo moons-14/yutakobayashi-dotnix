@@ -60,6 +60,11 @@
         path = inputs.prompt-review-skill;
         subdir = ".claude/skills";
       };
+      # difit: skills from yoshiko-pg/difit
+      difit = {
+        path = inputs.difit-skills;
+        subdir = "skills";
+      };
     };
 
     # Enable all local skills
@@ -71,6 +76,7 @@
       "aws"
       "obsidian"
       "repiq"
+      "difit"
     ];
 
     # Enable specific Anthropic skills

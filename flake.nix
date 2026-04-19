@@ -71,6 +71,10 @@
       url = "github:tokoroten/prompt-review";
       flake = false;
     };
+    difit-skills = {
+      url = "github:yoshiko-pg/difit";
+      flake = false;
+    };
     repiq = {
       url = "github:yutakobayashidev/repiq";
       inputs.nixpkgs.follows = "nixpkgs";
