@@ -120,16 +120,17 @@ flake.nix                          # エントリポイント
 │   │   │       └── fastfetch/
 │   │   └── lib/                   # ヘルパー関数
 │   │       └── helpers/
-│   └── overlays/                  # カスタムパッケージ（overlay形式）
-│       ├── default.nix            # 全overlayの集約
-│       ├── polycat.nix
-│       ├── aqua.nix
-│       ├── similarity-ts.nix
-│       ├── pretty-ts-errors-markdown.nix
+│   └── overlays/                  # dotnixローカルのoverlay / override
+│       ├── default.nix            # ローカルoverlayの集約
+│       ├── dev-tools.nix
+│       ├── speechrecognition.nix
+│       ├── tree-sitter-moonbit.nix
 │       └── ...
 └── nvim/                          # Neovim設定（Lua）
     └── lua/plugins/               # lazy.nvim プラグイン設定
 ```
+
+独自パッケージの実体は sibling repo の `~/ghq/github.com/yutakobayashidev/nur-packages` で管理し、`dotnix` から `path:../nur-packages` input 経由で取り込みます。
 
 ## Key Features
 

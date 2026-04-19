@@ -1335,6 +1335,23 @@
         "type": "gitlab"
       }
     },
+    "nur-packages": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1776612711,
+        "narHash": "sha256-DKx9hO5WcuWQ0dOam+014O+evdnGNqtZixi5mPfTeeE=",
+        "path": "/Users/yuta/ghq/github.com/yutakobayashidev/nur-packages",
+        "type": "path"
+      },
+      "original": {
+        "path": "../nur-packages",
+        "type": "path"
+      }
+    },
     "obsidian-skills": {
       "flake": false,
       "locked": {
@@ -1438,6 +1455,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-stable": "nixpkgs-stable_2",
+        "nur-packages": "nur-packages",
         "obsidian-skills": "obsidian-skills",
         "onepassword-shell-plugins": "onepassword-shell-plugins",
         "prompt-review-skill": "prompt-review-skill",

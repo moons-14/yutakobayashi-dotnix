@@ -79,6 +79,10 @@
       url = "github:yutakobayashidev/repiq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nur-packages = {
+      url = "path:../nur-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -143,6 +147,7 @@
       "https://cache.nixos.org"
       "https://cache.numtide.com"
       "https://yuta.cachix.org"
+      "https://yutakobayashidev-nur.cachix.org"
       "https://devenv.cachix.org"
       "https://nix-community.cachix.org"
     ];
@@ -150,6 +155,7 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "yuta.cachix.org-1:VGiC7m0kQjut7lp+RG/9pCRHFpzf11ELQrM2Nc2QCCk="
+      "yutakobayashidev-nur.cachix.org-1:ta0cksnLcjWO+Pg4BK++GsY4frBs9oNNY9XjaQ5QJ20="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
@@ -203,6 +209,7 @@
             inputs.rustowl-flake.overlays.default
             inputs.actrun-overlay.overlays.default
             inputs.firefox-addons.overlays.default
+            inputs.nur-packages.overlays.default
             (import ./nix/overlays/default.nix)
           ]
           ++ nixpkgs.lib.optionals isDarwin [
@@ -242,7 +249,9 @@
               keifu
               polycat
               pretty-ts-errors-markdown
+              readout
               similarity-ts
+              tunnelto
               ;
           };
           apps = {
