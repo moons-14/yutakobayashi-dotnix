@@ -63,6 +63,7 @@
       "adobe-acrobat-reader"
       "adobe-creative-cloud"
       "android-studio"
+      "maxon"
       "microsoft-auto-update"
       "qgis"
 

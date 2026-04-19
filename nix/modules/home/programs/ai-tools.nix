@@ -3,6 +3,7 @@
   home.packages =
     (with pkgs.llm-agents; [
       claude-code
+      apm
       ccusage
       copilot-cli
       opencode
