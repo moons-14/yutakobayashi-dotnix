@@ -94,6 +94,98 @@ Official upgrade guidance currently says:
 pnpm i next@latest react@latest react-dom@latest eslint-config-next@latest
 ```
 
+## Renovate / Dependabot
+
+Prefer having an automated dependency update bot instead of relying only on manual upgrades.
+
+For JavaScript/TypeScript repos, Renovate is the stronger default when the team wants fine-grained grouping, automerge policy, pinning strategy, and update hygiene in one place.
+
+Representative `renovate.json`:
+
+```json
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:recommended",
+		":semanticCommitTypeAll(chore)",
+		":enableVulnerabilityAlerts",
+		":separateMajorReleases",
+		"group:definitelyTyped",
+		"group:monorepos",
+		"group:test"
+	],
+	"rangeStrategy": "pin",
+	"labels": ["deps"],
+	"packageRules": [
+		{
+			"groupName": "npm patch dependencies",
+			"matchManagers": ["npm"],
+			"matchUpdateTypes": ["patch"],
+			"matchDepTypes": ["dependencies", "devDependencies", "peerDependencies"],
+			"matchPackageNames": ["*"],
+			"automerge": true
+		},
+		{
+			"groupName": "npm minor dependencies",
+			"matchManagers": ["npm"],
+			"matchUpdateTypes": ["minor"],
+			"matchDepTypes": ["dependencies", "devDependencies", "peerDependencies"],
+			"matchPackageNames": ["*"]
+		},
+		{
+			"groupName": "npm @types",
+			"matchManagers": ["npm"],
+			"matchPackageNames": ["@types/{/,}**"],
+			"automerge": true,
+			"major": {
+				"automerge": false
+			}
+		},
+		{
+			"groupName": "linter deps",
+			"matchManagers": ["npm"],
+			"matchPackageNames": ["/^@biomejs/", "/^prettier/"],
+			"extends": ["packages:linters"],
+			"automerge": true,
+			"major": {
+				"automerge": false
+			}
+		},
+		{
+			"matchManagers": ["npm"],
+			"groupName": "opentelemetry",
+			"automerge": true,
+			"major": {
+				"automerge": false
+			},
+			"matchPackageNames": ["/^@opentelemetry/*/"]
+		},
+		{
+			"matchManagers": ["npm"],
+			"groupName": "prisma",
+			"matchUpdateTypes": ["patch", "minor", "major"],
+			"automerge": true,
+			"major": {
+				"automerge": false
+			},
+			"matchPackageNames": ["/^@prisma/*/", "prisma"]
+		}
+	],
+	"ignoreDeps": []
+}
+```
+
+What to check:
+
+- the repo uses an update bot at all
+- update ranges are pinned or otherwise intentionally controlled
+- vulnerability alerts are enabled
+- major updates are separated from patch/minor noise
+- low-risk groups such as patch updates or `@types` are considered for automerge
+- important ecosystems such as linters, observability, ORM packages, or monorepo packages are grouped intentionally
+
+Dependabot is still a reasonable choice when the team wants a simpler built-in GitHub workflow. But if the repo needs opinionated grouping and automerge policy like the above, prefer Renovate.
+
 ## Tooling and test stack
 
 ## `tsup` -> `tsdown`
