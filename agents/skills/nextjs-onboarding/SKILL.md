@@ -61,6 +61,8 @@ minimumReleaseAge: 1440
 
 Report whether each setting is present, missing, or partially configured.
 
+If it is a monorepo, also check whether `sherif` is used to catch dependency/version drift across packages.
+
 ### 3. Node version pinning
 
 Check whether `.node-version` exists.
@@ -376,6 +378,12 @@ If the user asks for dependency guidance, package review, or modernization oppor
 
 Treat that file as a preference guide, not a list of npm-deprecated packages. The point is to prefer built-in APIs, open-code UI, or lighter modern tooling when they fit.
 
+### 12. Dependency audit and Next.js security hygiene
+
+Check whether the repo runs `pnpm audit` as part of dependency hygiene, either manually or in CI.
+
+If the repo uses Next.js, prefer keeping it on the latest stable version. Read `references/dependencies.md` for the current upgrade path and recent Server Components / App Router security context.
+
 ## Output format
 
 Use this structure unless the user asks for something else:
@@ -395,6 +403,7 @@ Use this structure unless the user asks for something else:
 - `next.config.*`
 - testing strategy
 - dependency choices
+- `pnpm audit` / Next.js security hygiene
 
 For each item, mark one of:
 
