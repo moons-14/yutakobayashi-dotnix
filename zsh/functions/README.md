@@ -16,7 +16,7 @@
 | `gifit`      | fzf でコミット範囲を選んで `difit` を実行               | `gifit`                      |
 | `gip`        | グローバルIPアドレスを表示                              | `gip`                        |
 | `gh-q`       | GitHub リポジトリを検索・clone                          | `gh-q [-o] [owner]`          |
-| `gwt`        | fzf で git worktree を検索・移動                        | `gwt`                        |
+| `W`          | fzf で git worktree を検索・移動                        | `W`                          |
 | `jb`         | fzf で jj bookmark を選択・new                          | `jb`                         |
 | `nfi`        | nix flake init with fuzzy template selection            | `nfi <flake_ref> [template]` |
 

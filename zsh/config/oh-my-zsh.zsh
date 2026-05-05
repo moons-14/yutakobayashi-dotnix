@@ -26,4 +26,3 @@ source $ZSH/oh-my-zsh.sh
 # oh-my-zsh gitプラグインのエイリアスを解除
 unalias g 2>/dev/null
 unalias gb 2>/dev/null
-unalias gwt 2>/dev/null
