@@ -56,6 +56,7 @@ If the project is a pnpm monorepo, also inspect `pnpm-workspace.yaml` for strict
 catalogMode: strict
 cleanupUnusedCatalogs: true
 packageManagerStrictVersion: true
+minimumReleaseAge: 1440
 ```
 
 Report whether each setting is present, missing, or partially configured.
@@ -367,6 +368,14 @@ Prefer repos that can:
 - run e2e tests in parallel without sharing one mutable database
 - centralize DB/app test setup helpers instead of repeating per-suite boilerplate
 
+### 11. Dependency choices
+
+Check whether the repo depends on packages that this project should generally avoid by default.
+
+If the user asks for dependency guidance, package review, or modernization opportunities, read `references/dependencies.md`.
+
+Treat that file as a preference guide, not a list of npm-deprecated packages. The point is to prefer built-in APIs, open-code UI, or lighter modern tooling when they fit.
+
 ## Output format
 
 Use this structure unless the user asks for something else:
@@ -385,6 +394,7 @@ Use this structure unless the user asks for something else:
 - Route Handler `RouteContext`
 - `next.config.*`
 - testing strategy
+- dependency choices
 
 For each item, mark one of:
 
