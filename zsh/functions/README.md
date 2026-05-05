@@ -11,10 +11,13 @@
 | `ct`         | Claude Code を tmux teammate mode で起動                | `ct [args]`                  |
 | `dev`        | tmux ベースのマルチプロジェクト開発セッション管理       | `dev [subcommand]`           |
 | `difit-cmux` | cmux でフォーカス中ディレクトリの `difit` を split 表示 | `difit-cmux`                 |
-| `g`          | 引数なし: ghq+peco でリポジトリ移動、引数あり: git      | `g [git args]`               |
+| `g`          | 引数なし: ghq+fzf でリポジトリ移動、引数あり: git       | `g [git args]`               |
 | `gb`         | fzf でブランチを検索・チェックアウト                    | `gb`                         |
 | `gifit`      | fzf でコミット範囲を選んで `difit` を実行               | `gifit`                      |
+| `gip`        | グローバルIPアドレスを表示                              | `gip`                        |
 | `gh-q`       | GitHub リポジトリを検索・clone                          | `gh-q [-o] [owner]`          |
 | `gwt`        | fzf で git worktree を検索・移動                        | `gwt`                        |
 | `jb`         | fzf で jj bookmark を選択・new                          | `jb`                         |
 | `nfi`        | nix flake init with fuzzy template selection            | `nfi <flake_ref> [template]` |
+
+`Ctrl+G` でも `g` の引数なしと同じ `ghq + fzf` のリポジトリ選択 UI を開ける。

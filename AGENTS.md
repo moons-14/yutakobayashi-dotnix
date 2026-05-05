@@ -147,11 +147,12 @@ flake.nix                          # エントリポイント
 - **Touch ID**: sudo認証対応
 - **1Password**: Shell Plugins（gh, awscli2）
 
-## Key Aliases
+## Key Shell Shortcuts
 
-定義場所: `zsh/config/aliases.zsh`
+定義場所: `zsh/config/aliases.zsh`, `zsh/functions/*.zsh`
 
 - `rebuild` → `nix run .#switch`（NixOS / macOS 共通）
-- `g` → 引数なし: ghq+peco、引数あり: git
+- `g` → 引数なし: ghq+fzf、引数あり: git
+- `Ctrl+G` → `g` の引数なしと同じ ghq+fzf ピッカー
 - `gh-q` → ghq + fzf でリポジトリ選択・clone
 - `yolo` → `claude --dangerously-skip-permissions`

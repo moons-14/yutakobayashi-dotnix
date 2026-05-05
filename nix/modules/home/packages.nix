@@ -43,7 +43,6 @@ in
       xh
       ripgrep
       fzf
-      peco
       jq
       jnv
       tokei
