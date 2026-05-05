@@ -113,7 +113,7 @@ Claude Code skills are managed via [agent-skills-nix](https://github.com/Kyure-A
 - **External skills**: [anthropics/skills](https://github.com/anthropics/skills), [vercel-labs/skills](https://github.com/vercel-labs/skills), [ast-grep/claude-skill](https://github.com/ast-grep/claude-skill)
 - **Deploy targets**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
 
-Key skills: `social-digest`, `oura-daily-watch`, `repo-creator`, `gha-lint`, `check-similarity`, `dce` (local), `docx`, `pdf`, `pptx`, `xlsx`, `frontend-design`, `webapp-testing`, `skill-creator` (Anthropic), `find-skills` (Vercel), `ast-grep` (ast-grep), `ui-ux-pro-max` (community)
+Avoid maintaining a fixed skill list here. Treat `agents/skills/` and `nix/modules/home/agent-skills.nix` as the source of truth.
 
 ## Templates
 

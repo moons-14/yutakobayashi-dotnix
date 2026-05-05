@@ -1,0 +1,286 @@
+---
+name: nextjs-onboarding
+description: Audit the baseline repo hygiene of an existing Next.js project when joining it for the first time. Use this whenever the user says they just joined a Next.js project, asks what to check first, wants a first-pass setup review, or wants to confirm dependency pinning, pnpm workspace strictness, Knip setup, Node version pinning, and environment-variable validation before doing feature work.
+user-invocable: true
+---
+
+# nextjs-onboarding
+
+Audit an existing Next.js project with a read-first checklist.
+
+This skill is for the first pass after joining a Next.js codebase. Focus on the repo hygiene and guardrails that should already be in place before feature work starts. Prefer concrete file-based evidence over broad architectural commentary.
+
+## Default stance
+
+- Start with inspection, not edits.
+- Do not change files during the initial pass unless the user explicitly asks for implementation.
+- Call out missing safeguards directly.
+- If something is absent, say so plainly and explain why it matters.
+
+## Primary checklist
+
+Inspect these items first and in this order.
+
+### 1. Scripts for formatting and linting
+
+Check `package.json` first for `scripts.lint` and `scripts.fmt`.
+
+These should exist as explicit entrypoints for contributors. If either is missing, call it out immediately.
+
+Preferred defaults:
+
+- `lint`: use `oxlint` when it fits the repo
+- `fmt`: use `oxfmt` when it fits the repo
+
+Acceptable alternatives when there is a clear reason:
+
+- `eslint`
+- `prettier`
+- `biome`
+
+Do not treat tool choice as the primary issue. The primary issue is whether contributors have stable, documented `lint` and `fmt` scripts to run.
+
+### 2. Dependency pinning
+
+Check whether `.npmrc` exists and contains:
+
+```ini
+save-exact=true
+```
+
+The goal is that newly added dependencies are pinned exactly rather than drifting with range operators.
+
+If the project is a pnpm monorepo, also inspect `pnpm-workspace.yaml` for strict catalog settings:
+
+```yaml
+catalogMode: strict
+cleanupUnusedCatalogs: true
+packageManagerStrictVersion: true
+```
+
+Report whether each setting is present, missing, or partially configured.
+
+### 3. Node version pinning
+
+Check whether `.node-version` exists.
+
+Call out version-pinning gaps if the repo relies on `packageManager` only or has no explicit Node version file at all.
+
+If the repo uses GitHub Actions, also check whether Node.js setup is centralized in a reusable composite action instead of duplicated across workflows.
+
+Prefer a shared action such as `.github/actions/setup-node/action.yml`:
+
+```yaml
+name: Setup Node
+description: 'Set up Node.js'
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+    - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      with:
+        node-version-file: .node-version
+        cache: pnpm
+    - run: cp ./.env.sample ./.env
+      shell: bash
+    - run: npm run setup
+      shell: bash
+    - run: pnpm i && pnpm rebuild
+      shell: bash
+```
+
+Do not require this exact script sequence, but prefer the same intent:
+
+- Node version comes from `.node-version`
+- pnpm setup is shared
+- dependency cache is enabled
+- local bootstrap steps are reusable across workflows
+- env bootstrap from `.env.sample` is explicit when the project expects it
+
+### 4. Unused-code detection with Knip
+
+Check whether `knip` is installed and exposed through scripts or tooling.
+
+Then inspect whether a config file such as `knip.config.ts` exists and is intentionally configured instead of left at defaults.
+
+Prefer a config shape along these lines:
+
+```ts
+import type { KnipConfig } from 'knip';
+
+const config: KnipConfig = {
+	ignore: ['.internal/**', 'tests/build.mjs', 'prisma.config.ts'],
+	playwright: {
+		config: ['playwright.config.ts'],
+		entry: ['e2e/**/*.ts'],
+	},
+	vitest: {
+		entry: ['src/**/*.test.ts'],
+	},
+	ignoreDependencies: ['postcss', 'tailwindcss'],
+	ignoreBinaries: ['stripe'],
+};
+
+export default config;
+```
+
+Do not require this exact file verbatim, but verify the project covers the same intent:
+
+- known false positives are ignored deliberately
+- Playwright entrypoints are declared when Playwright exists
+- Vitest entrypoints are declared when Vitest exists
+- noisy dependency and binary false positives are handled
+
+### 5. Environment validation
+
+Check whether environment variables are validated with code, ideally via `zod`, rather than relied on implicitly.
+
+Look for a pattern like:
+
+- `env.ts` or equivalent
+- loading env early, for example with `@next/env`
+- a schema for static/server/client env vars
+- explicit process exit on invalid env
+
+An expected pattern is:
+
+```ts
+import { loadEnvConfig } from '@next/env';
+import { z } from 'zod';
+```
+
+Then a schema-driven validator that checks required variables and fails fast. Prefer a concrete shape along these lines:
+
+```ts
+import { loadEnvConfig } from '@next/env';
+import { z } from 'zod';
+
+const staticEnv = z.object({
+	NODE_ENV: z
+		.union([z.literal('development'), z.literal('test'), z.literal('production')])
+		.default('development'),
+
+	NEXT_PUBLIC_SITE_URL: z.url(),
+
+	DATABASE_HOST: z.string().min(1),
+	DATABASE_PORT: z.coerce.number().min(1),
+	DATABASE_NAME: z.string().min(1),
+	DATABASE_USER: z.string().min(1),
+	DATABASE_PASSWORD: z.string().min(1),
+});
+
+const runtimeEnv = z.object({});
+
+const schema = z.intersection(staticEnv, runtimeEnv);
+
+export type Schema = z.infer<typeof schema>;
+
+export function config(kind: 'static' | 'runtime' = 'static') {
+	const { combinedEnv } = loadEnvConfig(process.cwd());
+	const res =
+		kind === 'static' ? staticEnv.safeParse(combinedEnv) : runtimeEnv.safeParse(combinedEnv);
+
+	if (res.error) {
+		console.error('\x1b[31m%s\x1b[0m', '[Errors] environment variables');
+		console.error(JSON.stringify(res.error.issues, null, 2));
+		process.exit(1);
+	}
+}
+```
+
+Do not require the exact providers or variable names, but verify the same mechanics:
+
+- env is loaded explicitly before validation
+- static env and runtime env are separated when needed
+- representative required server envs and public envs are both covered
+- coercion is used for numeric values such as ports
+- optional values, if present in the project, are validated intentionally rather than skipped implicitly
+- invalid env prints actionable errors and exits immediately
+
+### 6. Environment documentation
+
+Check whether `.env.sample` exists.
+
+It should be aligned with the validated env schema so a new contributor can discover the required variables without reading scattered code.
+
+### 7. Type-safe env access
+
+Check whether global env typing is wired, for example via `src/globals.d.ts` extending `NodeJS.ProcessEnv` from the validated env schema.
+
+An expected shape is:
+
+```ts
+import type { Schema } from '../../env';
+
+declare global {
+	namespace NodeJS {
+		interface ProcessEnv extends Schema {}
+	}
+
+	type PartialWithNullable<T> = {
+		[P in keyof T]?: T[P] | null;
+	};
+}
+```
+
+If env validation exists but typing does not, call that out as a smaller follow-up rather than a blocker.
+
+### 8. Route Handler params typing
+
+When the repo uses App Router Route Handlers, check whether route params are typed with the global `RouteContext<'/...'>` helper instead of hand-written context param types.
+
+Prefer patterns like:
+
+```ts
+import type { NextRequest } from 'next/server';
+
+export async function GET(_req: NextRequest, ctx: RouteContext<'/users/[id]'>) {
+	const { id } = await ctx.params;
+	return Response.json({ id });
+}
+```
+
+If you find hand-written handler context types for route params, call out that they should be replaced with `RouteContext` when the project is on the relevant Next.js version and type generation is already part of `next dev`, `next build`, or `next typegen`.
+
+## Output format
+
+Use this structure unless the user asks for something else:
+
+## Checklist result
+
+- `package.json` `lint` / `fmt` scripts
+- `.npmrc` / exact dependency pinning
+- `pnpm-workspace.yaml` strictness
+- `.node-version`
+- reusable `.github/actions/setup-node`
+- `knip` and `knip.config.*`
+- env validation
+- `.env.sample`
+- env typing
+- Route Handler `RouteContext`
+
+For each item, mark one of:
+
+- `OK`
+- `Missing`
+- `Partial`
+
+## Priority findings
+
+- `P0`: onboarding blockers or high-risk config gaps
+- `P1`: important hygiene gaps that should be fixed soon
+- `P2`: polish and consistency improvements
+
+Only include priorities that are supported by evidence.
+
+## Recommended next actions
+
+- concrete fixes in priority order
+- keep them small and implementation-ready
+
+## Style
+
+- Be concise and opinionated.
+- Prefer file paths and exact missing keys.
+- Do not drift into a general Next.js architecture review unless the user explicitly asks for that.
+- Treat missing repo hygiene as the core finding, not a side note.

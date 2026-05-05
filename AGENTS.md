@@ -27,23 +27,7 @@ nix flake update
 - **外部スキル**: `anthropics/skills`, `vercel-labs/skills`
 - **デプロイ先**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
 
-主なスキル：
-
-- `social-digest` - Discord + Mastodon投稿をObsidianに保存（ローカル）
-- `oura-daily-watch` - Oura Ring データ + Discord行動分析（ローカル）
-- `check-similarity` - TypeScript/JavaScript重複コード検知（ローカル）
-- `dce` - Dead Code Elimination（ローカル）
-- `markitdown` - 各種ファイル（PDF, DOCX, PPTX等）をMarkdownに変換（ローカル）
-- `speakerdeck` - SpeakerDeckスライド画像のダウンロード（ローカル）
-- `repo-creator` - GitHubリポジトリ作成ワークフロー（ローカル）
-- `docx`, `pdf`, `pptx`, `xlsx` - ドキュメント処理（Anthropic）
-- `frontend-design`, `skill-creator`, `webapp-testing` - 開発支援（Anthropic）
-- `find-skills` - スキル検索・発見支援（Vercel）
-- `ui-ux-pro-max` - UI/UXデザインシステム生成（コミュニティ）
-- `obsidian-markdown`, `obsidian-bases`, `json-canvas`, `obsidian-cli`, `defuddle` - Obsidian連携（kepano）
-- `prompt-review` - AIエージェント対話履歴の分析・プロンプティング力診断（tokoroten）
-
-詳細: `agents/README.md`
+スキル名の固定リストは保守コストが高いので置かず、利用可能なローカルスキルは `agents/skills/`、有効化している外部スキルは `nix/modules/home/agent-skills.nix` を正本とします。補足は `agents/README.md` を参照してください。
 
 ## Architecture
 
