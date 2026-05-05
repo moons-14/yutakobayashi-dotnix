@@ -15,357 +15,26 @@ Prefer a layered strategy:
 
 If the repo mocks the database heavily, do not automatically call that wrong. But if the product logic depends on SQL constraints, transactions, Prisma queries, or auth/session persistence, prefer real-database coverage for those paths.
 
-## Suggested directory structure
-
-When the repo has non-trivial e2e coverage, prefer an `e2e/` layout that separates helpers, fixtures/models, and test suites clearly.
-
-Representative shape:
-
-```text
-apps/frontend/
-└── e2e/
-    ├── a11y/
-    ├── helpers/
-    │   ├── app.ts
-    │   ├── drizzle.ts
-    │   ├── getRandomPort.ts
-    │   ├── users.ts
-    │   └── waitForHealth.ts
-    ├── integrations/
-    │   ├── item.test.ts
-    │   └── top-page.test.ts
-    └── models/
-        ├── Base.ts
-        ├── ItemPage.ts
-        ├── NotFoundPage.ts
-        └── TopPage.ts
-```
-
-The exact names do not matter. The point is to avoid one flat `e2e/` directory where helpers, fixtures, and scenario tests blur together.
-
-### What to check
-
-- reusable process and DB helpers live under `helpers/`
-- scenario or integration specs are grouped separately from support code
-- page objects or models are separated from raw test cases
-- accessibility-focused tests can live in their own slice when they have distinct tooling or assertions
-
-## Accessibility slice
-
-If the repo has meaningful UI coverage, prefer keeping accessibility checks in a dedicated `a11y/` slice instead of mixing them into every integration spec.
-
-Representative fixture shape:
-
-```ts
-import AxeBuilder from '@axe-core/playwright';
-
-a11y: async ({ page }, use) => {
-	const makeAxeBuilder = () =>
-		new AxeBuilder({ page })
-			.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-			.disableRules(['meta-viewport']);
-
-	await use(makeAxeBuilder);
-},
-```
-
-Representative spec shape:
-
-```ts
-import { expect } from '@playwright/test';
-import { user1 } from '../dummyUsers';
-import { test } from '../fixtures';
-import { useUser } from '../helpers/users';
-
-test.describe('Top Page', () => {
-	test.describe('not signed in', () => {
-		test('should not have any automatically detectable accessibility issues', async ({
-			topPage,
-			a11y,
-		}) => {
-			await topPage.goTo();
-
-			const res = await a11y().analyze();
-
-			expect(res.violations).toEqual([]);
-		});
-	});
-
-	test.describe('signed in', () => {
-		useUser(test, user1);
-
-		test('should not have any automatically detectable accessibility issues', async ({
-			topPage,
-			a11y,
-		}) => {
-			await topPage.goTo();
-
-			await topPage.addItem('foo');
-			await topPage.addItem('bar');
-
-			const res = await a11y().analyze();
-
-			expect(res.violations).toEqual([]);
-		});
-	});
-});
-```
-
-### What to check
-
-- axe-based checks are easy to run through a shared fixture
-- signed-in and signed-out states are both covered when the UI meaningfully differs
-- disabled rules are intentional and documented, not cargo-culted
-- accessibility assertions stay focused on auto-detectable violations, with broader UX checks handled elsewhere
-
-## Test users and setup project
-
-When the suite relies on authenticated users, prefer keeping deterministic test identities in one file and generating auth state in a Playwright setup project.
-
-Representative `e2e/dummyUsers.ts`:
-
-```ts
-import type { User } from 'next-auth';
-
-type RemoveNullish<T> = {
-	[K in keyof T]-?: NonNullable<T[K]>;
-};
-
-type NonNullableUser = RemoveNullish<User>;
-
-export const user1: NonNullableUser = {
-	id: '11111111-1111-4111-8111-111111111111',
-	name: 'user1',
-	email: 'user1@test.invalid',
-	image:
-		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR42u3OMQEAAAQAMDrpp4Zuyojh2RIsa7bjUQoICAgICAgICAgICAgICHwHDhv0ROEuXMGUAAAAAElFTkSuQmCC',
-};
-
-export const admin1: NonNullableUser = {
-	id: '22222222-2222-4222-8222-222222222222',
-	name: 'admin1',
-	email: 'admin1@test.invalid',
-	image:
-		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8qS5UDwAExgGj/3sspQAAAABJRU5ErkJggg==',
-};
-```
-
-Representative `e2e/setup/auth.ts`:
-
-```ts
-import { test as setup } from '@playwright/test';
-import { admin1, user1 } from '../dummyUsers';
-import { createUserAuthState } from '../helpers/users';
-
-setup('Create user1 auth', async ({ context }) => {
-	await createUserAuthState(context, {
-		user: user1,
-	} as Parameters<typeof createUserAuthState>[1]);
-});
-
-setup('Create admin1 auth', async ({ context }) => {
-	await createUserAuthState(context, {
-		user: admin1,
-	} as Parameters<typeof createUserAuthState>[1]);
-});
-```
-
-### What to check
-
-- test users are deterministic and easy to reference across specs
-- regular users and privileged users are separated clearly
-- auth state generation happens in setup, not ad hoc inside every test
-- `.auth/*.json` outputs are treated as generated artifacts, not hand-maintained fixtures
-
-## Playwright configuration
-
-Prefer a Playwright config that:
-
-- validates env on load
-- uses a dedicated `setup` project
-- runs actual browser projects after setup dependencies complete
-- allows parallel execution when the DB/app isolation model supports it
-
-Representative shape:
-
-```ts
-import { defineConfig, devices } from '@playwright/test';
-import { config } from './env';
-
-config();
-
-export default defineConfig({
-	testDir: './e2e',
-	fullyParallel: true,
-	projects: [
-		{
-			name: 'setup',
-			testMatch: /.\/e2e\/setup\/.*.ts/,
-		},
-		{
-			name: 'chrome',
-			use: {
-				...devices['Desktop Chrome'],
-				headless: false,
-				launchOptions: {
-					args: [],
-				},
-			},
-			dependencies: ['setup'],
-		},
-	],
-});
-```
-
-### What to check
-
-- `config()` runs before the config object is exported
-- setup tasks are isolated under a dedicated Playwright project
-- browser projects depend on setup explicitly
-- `fullyParallel` is only enabled when worker isolation is actually safe
-- headed/headless defaults look intentional for the team’s workflow
-
-## Page object / model structure
-
-When the repo uses Playwright heavily, prefer page objects or models over repeating raw locators in each spec.
-
-A good pattern is:
-
-1. define a shared `Base` model for common layout and auth-aware UI
-2. extend that base for page-specific models
-3. keep scenario logic in `integrations/*.test.ts`
-
-### Base model
-
-Representative shape:
-
-```ts
-import { expect, type Locator, type Page } from '@playwright/test';
-import type { User } from 'next-auth';
-
-export class Base {
-	page: Page;
-	headerLocator: Locator;
-	headerButtonSignInLocator: Locator;
-	headerButtonSignOutLocator: Locator;
-	headerLinkMyPageLocator: Locator;
-	headerImageMyAvatorLocator: Locator;
-	footerLocator: Locator;
-	footerLinkRepositoryLocator: Locator;
-
-	constructor(page: Page) {
-		this.page = page;
-		this.headerLocator = this.page.locator('header');
-		this.headerButtonSignInLocator = this.headerLocator.getByRole('button', {
-			name: 'Sign in',
-		});
-		this.headerButtonSignOutLocator = this.headerLocator.getByRole('button', {
-			name: 'Sign out',
-		});
-		this.headerLinkMyPageLocator = this.headerLocator.locator("a[href='/me']");
-		this.headerImageMyAvatorLocator = this.headerLocator.getByRole('img', {
-			name: 'profile',
-		});
-		this.footerLocator = this.page.locator('footer');
-		this.footerLinkRepositoryLocator = this.footerLocator.getByRole('link', {
-			name: 'Repository',
-		});
-	}
-
-	async goToMePage() {
-		await this.headerLinkMyPageLocator.click();
-	}
-
-	async expectHeaderUI(state: 'signIn' | 'signOut', user?: User) {
-		if (state === 'signIn') {
-			await expect(this.headerButtonSignInLocator).not.toBeVisible();
-			await expect(this.headerButtonSignOutLocator).toBeVisible();
-			expect(await this.headerImageMyAvatorLocator.getAttribute('src')).toBe(user?.image);
-		}
-
-		if (state === 'signOut') {
-			await expect(this.headerButtonSignInLocator).toBeVisible();
-			await expect(this.headerButtonSignOutLocator).not.toBeVisible();
-			await expect(this.headerButtonSignInLocator).toBeVisible();
-		}
-	}
-
-	async expectFooterUI() {
-		await expect(this.footerLinkRepositoryLocator).toBeVisible();
-		await expect(this.footerLinkRepositoryLocator).toHaveAttribute(
-			'href',
-			'https://github.com/example/example',
-		);
-	}
-}
-```
-
-### Page-specific model
-
-Representative shape:
-
-```ts
-import { expect, type Locator, type Page } from '@playwright/test';
-import { Base } from './Base';
-
-export class TopPage extends Base {
-	titleLocator: Locator;
-	addButtonLocator: Locator;
-
-	constructor(page: Page) {
-		super(page);
-
-		this.titleLocator = this.page.getByRole('heading', {
-			name: 'Items',
-		});
-		this.addButtonLocator = this.page.getByRole('button', {
-			name: 'Add item',
-		});
-	}
-
-	async goTo() {
-		return await this.page.goto('/');
-	}
-
-	async expectUI() {
-		await expect(this.titleLocator).toBeVisible();
-		await expect(this.addButtonLocator).toBeVisible();
-	}
-}
-```
-
-### Integration spec shape
-
-Representative shape:
-
-```ts
-import { user1 } from '../dummyUsers';
-import { test } from '../fixtures';
-import { useUser } from '../helpers/users';
-
-test.describe('top page', () => {
-	useUser(test, user1);
-
-	test.beforeEach(async ({ topPage }) => {
-		await topPage.goTo();
-		await topPage.expectHeaderUI('signIn', user1);
-		await topPage.expectUI();
-	});
-
-	test('shows the signed-in top page', async ({ topPage }) => {
-		await topPage.expectHeaderUI('signIn', user1);
-		await topPage.expectUI();
-	});
-});
-```
-
-### What to check
-
-- common header/footer/auth expectations are centralized in a base model
-- page-specific assertions stay in page-specific models
-- specs read like scenarios, not selector scripts
-- fixtures inject ready-to-use models instead of constructing them ad hoc in each test
-- auth helpers such as `useUser` are applied at the right scope before page creation
+## Recommended reading order
+
+This file is easiest to read in this order:
+
+1. shared database test infrastructure
+   - `Real DB integration tests with Testcontainers`
+   - `Drizzle variant`
+2. unit and integration test wiring
+   - `Vitest pattern`
+   - `Vitest configuration`
+3. browser and end-to-end test wiring
+   - `Suggested directory structure`
+   - `Test users and setup project`
+   - `Playwright configuration`
+   - `Parallel Playwright with real DB`
+   - `Authenticated user setup`
+   - `Page object / model structure`
+   - `Accessibility slice`
+
+If the current order feels strange, follow this sequence instead. The implementation dependencies are closer to DB helper first, then Vitest, then Playwright/e2e.
 
 ## Real DB integration tests with Testcontainers
 
@@ -656,6 +325,148 @@ export default defineConfig(async () => {
 - mock reset/restore behavior is explicit
 - framework-specific dependency inlining is documented rather than mysterious
 
+## Suggested directory structure
+
+When the repo has non-trivial e2e coverage, prefer an `e2e/` layout that separates helpers, fixtures/models, and test suites clearly.
+
+Representative shape:
+
+```text
+apps/frontend/
+└── e2e/
+    ├── a11y/
+    ├── helpers/
+    │   ├── app.ts
+    │   ├── drizzle.ts
+    │   ├── getRandomPort.ts
+    │   ├── users.ts
+    │   └── waitForHealth.ts
+    ├── integrations/
+    │   ├── item.test.ts
+    │   └── top-page.test.ts
+    └── models/
+        ├── Base.ts
+        ├── ItemPage.ts
+        ├── NotFoundPage.ts
+        └── TopPage.ts
+```
+
+The exact names do not matter. The point is to avoid one flat `e2e/` directory where helpers, fixtures, and scenario tests blur together.
+
+### What to check
+
+- reusable process and DB helpers live under `helpers/`
+- scenario or integration specs are grouped separately from support code
+- page objects or models are separated from raw test cases
+- accessibility-focused tests can live in their own slice when they have distinct tooling or assertions
+
+## Test users and setup project
+
+When the suite relies on authenticated users, prefer keeping deterministic test identities in one file and generating auth state in a Playwright setup project.
+
+Representative `e2e/dummyUsers.ts`:
+
+```ts
+import type { User } from 'next-auth';
+
+type RemoveNullish<T> = {
+	[K in keyof T]-?: NonNullable<T[K]>;
+};
+
+type NonNullableUser = RemoveNullish<User>;
+
+export const user1: NonNullableUser = {
+	id: '11111111-1111-4111-8111-111111111111',
+	name: 'user1',
+	email: 'user1@test.invalid',
+	image:
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVR42u3OMQEAAAQAMDrpp4Zuyojh2RIsa7bjUQoICAgICAgICAgICAgICHwHDhv0ROEuXMGUAAAAAElFTkSuQmCC',
+};
+
+export const admin1: NonNullableUser = {
+	id: '22222222-2222-4222-8222-222222222222',
+	name: 'admin1',
+	email: 'admin1@test.invalid',
+	image:
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8qS5UDwAExgGj/3sspQAAAABJRU5ErkJggg==',
+};
+```
+
+Representative `e2e/setup/auth.ts`:
+
+```ts
+import { test as setup } from '@playwright/test';
+import { admin1, user1 } from '../dummyUsers';
+import { createUserAuthState } from '../helpers/users';
+
+setup('Create user1 auth', async ({ context }) => {
+	await createUserAuthState(context, {
+		user: user1,
+	} as Parameters<typeof createUserAuthState>[1]);
+});
+
+setup('Create admin1 auth', async ({ context }) => {
+	await createUserAuthState(context, {
+		user: admin1,
+	} as Parameters<typeof createUserAuthState>[1]);
+});
+```
+
+### What to check
+
+- test users are deterministic and easy to reference across specs
+- regular users and privileged users are separated clearly
+- auth state generation happens in setup, not ad hoc inside every test
+- `.auth/*.json` outputs are treated as generated artifacts, not hand-maintained fixtures
+
+## Playwright configuration
+
+Prefer a Playwright config that:
+
+- validates env on load
+- uses a dedicated `setup` project
+- runs actual browser projects after setup dependencies complete
+- allows parallel execution when the DB/app isolation model supports it
+
+Representative shape:
+
+```ts
+import { defineConfig, devices } from '@playwright/test';
+import { config } from './env';
+
+config();
+
+export default defineConfig({
+	testDir: './e2e',
+	fullyParallel: true,
+	projects: [
+		{
+			name: 'setup',
+			testMatch: /.\/e2e\/setup\/.*.ts/,
+		},
+		{
+			name: 'chrome',
+			use: {
+				...devices['Desktop Chrome'],
+				headless: false,
+				launchOptions: {
+					args: [],
+				},
+			},
+			dependencies: ['setup'],
+		},
+	],
+});
+```
+
+### What to check
+
+- `config()` runs before the config object is exported
+- setup tasks are isolated under a dedicated Playwright project
+- browser projects depend on setup explicitly
+- `fullyParallel` is only enabled when worker isolation is actually safe
+- headed/headless defaults look intentional for the team’s workflow
+
 ## Parallel Playwright with real DB
 
 Playwright becomes slower and harder to isolate if every test hits the same app process and database.
@@ -910,6 +721,188 @@ export async function generateDrizzleClient(url: string) {
 - Drizzle helpers close their PG pool reliably
 - `useUser` is applied before page creation at the correct test scope
 - framework-specific cookie names or token shapes are fine, but keep the helper surface generic and easy to swap
+
+## Page object / model structure
+
+When the repo uses Playwright heavily, prefer page objects or models over repeating raw locators in each spec.
+
+A good pattern is:
+
+1. define a shared `Base` model for common layout and auth-aware UI
+2. extend that base for page-specific models
+3. keep scenario logic in `integrations/*.test.ts`
+
+### Base model
+
+Representative shape:
+
+```ts
+import { expect, type Locator, type Page } from '@playwright/test';
+import type { User } from 'next-auth';
+
+export class Base {
+	page: Page;
+	headerLocator: Locator;
+	headerButtonSignInLocator: Locator;
+	headerButtonSignOutLocator: Locator;
+
+	constructor(page: Page) {
+		this.page = page;
+		this.headerLocator = this.page.locator('header');
+		this.headerButtonSignInLocator = this.headerLocator.getByRole('button', {
+			name: 'Sign in',
+		});
+		this.headerButtonSignOutLocator = this.headerLocator.getByRole('button', {
+			name: 'Sign out',
+		});
+	}
+
+	async expectHeaderUI(state: 'signIn' | 'signOut', user?: User) {
+		if (state === 'signIn') {
+			await expect(this.headerButtonSignInLocator).not.toBeVisible();
+			await expect(this.headerButtonSignOutLocator).toBeVisible();
+		}
+
+		if (state === 'signOut') {
+			await expect(this.headerButtonSignInLocator).toBeVisible();
+			await expect(this.headerButtonSignOutLocator).not.toBeVisible();
+		}
+	}
+}
+```
+
+### Page-specific model
+
+Representative shape:
+
+```ts
+import { expect, type Locator, type Page } from '@playwright/test';
+import { Base } from './Base';
+
+export class TopPage extends Base {
+	titleLocator: Locator;
+	addButtonLocator: Locator;
+
+	constructor(page: Page) {
+		super(page);
+
+		this.titleLocator = this.page.getByRole('heading', {
+			name: 'Items',
+		});
+		this.addButtonLocator = this.page.getByRole('button', {
+			name: 'Add item',
+		});
+	}
+
+	async goTo() {
+		return await this.page.goto('/');
+	}
+
+	async expectUI() {
+		await expect(this.titleLocator).toBeVisible();
+		await expect(this.addButtonLocator).toBeVisible();
+	}
+}
+```
+
+### Integration spec shape
+
+Representative shape:
+
+```ts
+import { user1 } from '../dummyUsers';
+import { test } from '../fixtures';
+import { useUser } from '../helpers/users';
+
+test.describe('top page', () => {
+	useUser(test, user1);
+
+	test.beforeEach(async ({ topPage }) => {
+		await topPage.goTo();
+		await topPage.expectHeaderUI('signIn', user1);
+		await topPage.expectUI();
+	});
+
+	test('shows the signed-in top page', async ({ topPage }) => {
+		await topPage.expectHeaderUI('signIn', user1);
+		await topPage.expectUI();
+	});
+});
+```
+
+### What to check
+
+- common auth-related expectations are centralized in a base model
+- page-specific assertions stay in page-specific models
+- specs read like scenarios, not selector scripts
+- fixtures inject ready-to-use models instead of constructing them ad hoc in each test
+- auth helpers such as `useUser` are applied at the right scope before page creation
+
+## Accessibility slice
+
+If the repo has meaningful UI coverage, prefer keeping accessibility checks in a dedicated `a11y/` slice instead of mixing them into every integration spec.
+
+Representative fixture shape:
+
+```ts
+import AxeBuilder from '@axe-core/playwright';
+
+a11y: async ({ page }, use) => {
+	const makeAxeBuilder = () =>
+		new AxeBuilder({ page })
+			.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+			.disableRules(['meta-viewport']);
+
+	await use(makeAxeBuilder);
+},
+```
+
+Representative spec shape:
+
+```ts
+import { expect } from '@playwright/test';
+import { user1 } from '../dummyUsers';
+import { test } from '../fixtures';
+import { useUser } from '../helpers/users';
+
+test.describe('Top Page', () => {
+	test.describe('not signed in', () => {
+		test('should not have any automatically detectable accessibility issues', async ({
+			topPage,
+			a11y,
+		}) => {
+			await topPage.goTo();
+
+			const res = await a11y().analyze();
+
+			expect(res.violations).toEqual([]);
+		});
+	});
+
+	test.describe('signed in', () => {
+		useUser(test, user1);
+
+		test('should not have any automatically detectable accessibility issues', async ({
+			topPage,
+			a11y,
+		}) => {
+			await topPage.goTo();
+			await topPage.expectUI();
+
+			const res = await a11y().analyze();
+
+			expect(res.violations).toEqual([]);
+		});
+	});
+});
+```
+
+### What to check
+
+- axe-based checks are easy to run through a shared fixture
+- signed-in and signed-out states are both covered when the UI meaningfully differs
+- disabled rules are intentional and documented, not cargo-culted
+- accessibility assertions stay focused on auto-detectable violations, with broader UX checks handled elsewhere
 
 ## Red flags
 
