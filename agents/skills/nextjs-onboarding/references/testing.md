@@ -731,6 +731,8 @@ jobs:
 
 If the repo is a monorepo, adapt commands with workspace filters or `pnpm --dir`. For a single repo, prefer the simpler direct commands.
 
+When reviewing or changing these workflow files, also run the `gha-lint` skill so the workflow is checked with `actionlint`, `pinact`, `ghalint`, and `zizmor` rather than only reading YAML by eye.
+
 Representative `.github/actions/setup-db/action.yml`:
 
 ```yaml
@@ -764,6 +766,7 @@ Representative `package.json` script:
 - e2e installs the browser explicitly and builds before running
 - single-repo workflows do not carry unnecessary `pnpm --dir` indirection
 - custom runners are paired with `.github/actionlint.yaml` so workflow linting stays accurate
+- workflow changes are reviewed with the `gha-lint` skill, not only by visual inspection
 
 ## Parallel Playwright with real DB
 
