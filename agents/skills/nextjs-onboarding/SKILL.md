@@ -384,6 +384,19 @@ Check whether the repo runs `pnpm audit` as part of dependency hygiene, either m
 
 If the repo uses Next.js, prefer keeping it on the latest stable version. Read `references/dependencies.md` for the current upgrade path and recent Server Components / App Router security context.
 
+### 13. Utility patterns
+
+Check whether the repo has a small set of intentional shared utilities for common Next.js concerns instead of reimplementing them ad hoc across routes and server actions.
+
+If the user asks for utility design, shared helper review, or examples of useful baseline utilities, read `references/utils.md`.
+
+Prefer utilities that:
+
+- encode one repeated rule clearly instead of becoming a generic dumping ground
+- compose well with Route Handlers, server actions, and auth boundaries
+- return explicit results for expected failures instead of throwing everywhere
+- keep parsing and validation close to the edge of the request
+
 ## Output format
 
 Use this structure unless the user asks for something else:
@@ -404,6 +417,7 @@ Use this structure unless the user asks for something else:
 - testing strategy
 - dependency choices
 - `pnpm audit` / Next.js security hygiene
+- utility patterns
 
 For each item, mark one of:
 
