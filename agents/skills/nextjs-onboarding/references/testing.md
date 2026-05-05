@@ -280,6 +280,122 @@ export async function setup() {
 - Per-test cleanup is `truncate`, not full process restart.
 - Each suite has isolated DB state.
 
+### Route Handler suite shape
+
+For App Router Route Handlers, prefer testing the exported handler directly with `Request` objects instead of only going through browser tests.
+
+Representative shape:
+
+```ts
+import { describe, expect, test } from 'vitest';
+import { groups, groupMembers, groupQuestionPresets } from '@/db/schema';
+import { setup } from '../../../../../tests/vitest.helper';
+
+// import after vitest helper setup when module state depends on mocks
+import { GET } from './route';
+
+const { db, createUser, mock } = await setup();
+
+describe('api/items/new-data', () => {
+	test('returns creatable groups and question presets', async () => {
+		const actor = await createUser();
+		const groupId = '01964444-b006-7006-8006-111111111111';
+
+		await db.insert(groups).values({
+			id: groupId,
+			slug: 'sample-group',
+			name: 'Sample Group',
+			createdBy: actor.id,
+		});
+
+		await db.insert(groupMembers).values({
+			userId: actor.id,
+			groupId,
+			role: 'owner',
+		});
+
+		await db.insert(groupQuestionPresets).values({
+			id: '01964444-b006-7006-8006-222222222222',
+			groupId,
+			label: 'Experience',
+			required: true,
+			orderIndex: 0,
+		});
+
+		const res = await GET(new Request('http://localhost/api/items/new-data?group=sample-group'));
+
+		expect(res.status).toBe(200);
+		expect(await res.json()).toMatchInlineSnapshot(`
+			{
+			  "groupQuestionPresets": {
+			    "sample-group": [
+			      {
+			        "label": "Experience",
+			        "required": true,
+			      },
+			    ],
+			  },
+			  "groups": [
+			    {
+			      "name": "Sample Group",
+			      "slug": "sample-group",
+			    },
+			  ],
+			  "initialSlug": "sample-group",
+			}
+		`);
+	});
+
+	test('returns 403 when the actor has no creatable groups', async () => {
+		const actor = await createUser();
+		const groupId = '01964444-b006-7006-8006-333333333333';
+
+		await db.insert(groups).values({
+			id: groupId,
+			slug: 'read-only-group',
+			name: 'Read Only Group',
+			createdBy: actor.id,
+		});
+
+		await db.insert(groupMembers).values({
+			userId: actor.id,
+			groupId,
+			role: 'viewer',
+		});
+
+		const res = await GET(new Request('http://localhost/api/items/new-data'));
+
+		expect(res.status).toBe(403);
+		expect(await res.json()).toMatchInlineSnapshot(`
+			{
+			  "error": "NO_CREATABLE_GROUP",
+			}
+		`);
+	});
+
+	test('returns 401 when unauthenticated', async () => {
+		mock.auth.mockReturnValue(null);
+
+		const res = await GET(new Request('http://localhost/api/items/new-data'));
+
+		expect(res.status).toBe(401);
+		expect(await res.json()).toMatchInlineSnapshot(`
+			{
+			  "error": "UNAUTHENTICATED",
+			}
+		`);
+	});
+});
+```
+
+### What to check
+
+- the handler is tested directly without spinning up the whole app
+- authenticated, unauthorized, and domain-success cases are all covered
+- DB setup uses the shared isolated test helper
+- auth/session mocks are reset predictably between tests
+- snapshots are used for stable response payloads when they improve readability
+
 ## Vitest configuration
 
 Prefer a Vitest config that validates env on load and makes the test environment explicit.
