@@ -1,6 +1,6 @@
 ---
 name: nextjs-onboarding
-description: Audit the baseline repo hygiene of an existing Next.js project when joining it for the first time. Use this whenever the user says they just joined a Next.js project, asks what to check first, wants a first-pass setup review, or wants to confirm dependency pinning, pnpm workspace strictness, Knip setup, Node version pinning, and environment-variable validation before doing feature work.
+description: Audit the baseline repo hygiene of an existing Next.js project when joining it for the first time. Use this whenever the user says they just joined a Next.js project, asks what to check first, wants a first-pass setup review, or wants to confirm dependency pinning, pnpm workspace strictness, Knip setup, Node version pinning, environment-variable validation, or testing strategy before doing feature work.
 user-invocable: true
 ---
 
@@ -348,6 +348,25 @@ Explain the purpose of each setting when reporting:
 
 When the repo diverges from this baseline, explain whether the difference looks intentional, outdated, or simply missing.
 
+### 10. Testing strategy
+
+Check whether the repo has an intentional test strategy instead of only ad hoc unit tests.
+
+Start with the surface area:
+
+- `package.json` scripts such as `test`, `test:watch`, `test:e2e`, `test:coverage`
+- Vitest configuration
+- Playwright configuration
+- CI execution of the intended test layers
+
+If the repo uses a real database in tests, or the user asks for a deeper evaluation of testing quality, read `references/testing.md`.
+
+Prefer repos that can:
+
+- run unit/integration tests against a real isolated database
+- run e2e tests in parallel without sharing one mutable database
+- centralize DB/app test setup helpers instead of repeating per-suite boilerplate
+
 ## Output format
 
 Use this structure unless the user asks for something else:
@@ -365,6 +384,7 @@ Use this structure unless the user asks for something else:
 - env typing
 - Route Handler `RouteContext`
 - `next.config.*`
+- testing strategy
 
 For each item, mark one of:
 
@@ -391,3 +411,4 @@ Only include priorities that are supported by evidence.
 - Prefer file paths and exact missing keys.
 - Do not drift into a general Next.js architecture review unless the user explicitly asks for that.
 - Treat missing repo hygiene as the core finding, not a side note.
+- For testing, keep the checklist in this file short and load `references/testing.md` only when the repo actually has non-trivial test infrastructure or the user asks for depth.
