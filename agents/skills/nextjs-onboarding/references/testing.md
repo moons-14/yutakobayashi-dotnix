@@ -400,6 +400,19 @@ describe('api/items/new-data', () => {
 
 Prefer a Vitest config that validates env on load and makes the test environment explicit.
 
+Representative `package.json` scripts:
+
+```json
+{
+	"test": "NODE_ENV=test vitest run",
+	"test:watch": "NODE_ENV=test vitest watch",
+	"test:e2e": "NODE_ENV=test playwright test",
+	"test:e2e:ui": "pnpm test:e2e --ui"
+}
+```
+
+This matters because `NODE_ENV=test` makes `.env.test` the expected source of truth during test execution in many Next.js projects.
+
 Representative shape:
 
 ```ts
@@ -435,11 +448,47 @@ export default defineConfig(async () => {
 
 ### What to check
 
+- `package.json` test scripts explicitly run with `NODE_ENV=test` when the project depends on env-based test config
 - `config()` runs before exporting the Vitest config
 - `globalSetup` exists when shared bootstrapping is needed
 - `environment` is chosen intentionally (`jsdom` vs `node`)
 - mock reset/restore behavior is explicit
 - framework-specific dependency inlining is documented rather than mysterious
+
+## `.env.test` strategy
+
+Prefer a dedicated `.env.test` for test-only behavior and external integration neutralization.
+
+Representative shape:
+
+```dotenv
+# Google OAuth
+GOOGLE_CLIENT_ID=dummy
+GOOGLE_CLIENT_SECRET=dummy
+
+# NextAuth.js
+NEXTAUTH_TEST_MODE=true
+
+# start: stripe #
+# Stripe
+STRIPE_SECRET_KEY=dummy
+STRIPE_WEBHOOK_SECRET=dummy
+STRIPE_PRICE_ID=dummy
+# end: stripe #
+```
+
+What matters:
+
+- test runs should not trigger real external transactions
+- OAuth, payments, and similar third-party integrations should be replaced with inert values in test mode
+- `.env.test` should be loaded through the project’s normal env loading path instead of special-casing every test manually
+
+### What to check
+
+- `.env.test` exists when the project depends on environment-driven integrations
+- external API credentials are replaced with safe dummy values in test mode
+- test-only flags such as `NEXTAUTH_TEST_MODE=true` are explicit
+- the project does not risk hitting real payment/auth providers during local or CI tests
 
 ## Suggested directory structure
 
