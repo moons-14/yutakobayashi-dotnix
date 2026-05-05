@@ -55,11 +55,11 @@ in
       tree
       glow
       gum
+      roots
       vhs
       yazi
       imagemagick
       ffmpeg
-      python313Packages.markitdown
       stable.yt-dlp
       halloy
       immich-go
@@ -83,6 +83,7 @@ in
       fastfetch
     ]
     ++ lib.optionals pkgs.stdenv.isLinux [
+      python313Packages.markitdown
       proton-vpn-cli
     ];
 }

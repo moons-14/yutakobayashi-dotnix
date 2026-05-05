@@ -250,6 +250,7 @@
               polycat
               pretty-ts-errors-markdown
               readout
+              roots
               similarity-ts
               tunnelto
               ;

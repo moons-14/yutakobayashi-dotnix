@@ -63,9 +63,11 @@
       "adobe-acrobat-reader"
       "adobe-creative-cloud"
       "android-studio"
+      "google-drive"
       "maxon"
       "microsoft-auto-update"
       "qgis"
+      "visual-studio-code"
 
       # Hardware
       "ledger-wallet"
@@ -90,6 +92,7 @@
       "cmux"
       "bitcoin-core"
       "keybase"
+      "raycast"
       "tor-browser"
     ];
 

@@ -130,7 +130,7 @@ flake.nix                          # エントリポイント
     └── lua/plugins/               # lazy.nvim プラグイン設定
 ```
 
-独自パッケージの実体は sibling repo の `~/ghq/github.com/yutakobayashidev/nur-packages` で管理し、`dotnix` から `path:../nur-packages` input 経由で取り込みます。
+独自パッケージの実体は `yutakobayashidev/nur-packages` で管理し、`dotnix` は GitHub flake input として取り込みます。ローカルの未 push 変更を試すときだけ `--override-input nur-packages path:../nur-packages` を使います。
 
 ## Key Features
 

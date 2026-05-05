@@ -38,13 +38,12 @@
       anki
       figma
       synthesia
-      linear-linear
+      linear
       notion-calendar
 
       # Development
       proxyman
       tableplus
-      visual-studio-code
 
       # Media
       vlc
@@ -52,7 +51,6 @@
 
       # Utilities
       appcleaner
-      raycast
       screen-studio
       stats
       yubico-authenticator

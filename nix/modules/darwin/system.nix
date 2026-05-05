@@ -68,9 +68,6 @@
       };
     };
 
-    activationScripts.extraActivation.text = ''
-      softwareupdate --all --install
-    '';
   };
 
   system.startup.chime = false;
