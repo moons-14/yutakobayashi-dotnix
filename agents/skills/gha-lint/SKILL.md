@@ -60,6 +60,18 @@ Or use the official download script:
   run: ./actionlint
 ```
 
+### Custom Runner Labels
+
+If workflows use self-hosted or custom runner labels, add `.github/actionlint.yaml` so actionlint can validate them correctly.
+
+```yaml
+self-hosted-runner:
+  labels:
+    - blacksmith-4vcpu-ubuntu-2404
+```
+
+Without this file, actionlint often reports unknown runner labels even when the workflow is correct.
+
 ---
 
 ## pinact
