@@ -242,6 +242,112 @@ export async function GET(_req: NextRequest, ctx: RouteContext<'/users/[id]'>) {
 
 If you find hand-written handler context types for route params, call out that they should be replaced with `RouteContext` when the project is on the relevant Next.js version and type generation is already part of `next dev`, `next build`, or `next typegen`.
 
+### 9. `next.config.*` baseline
+
+Check whether `next.config.ts` or `next.config.*` is present and intentionally configured rather than left almost empty.
+
+Prefer a baseline like:
+
+```ts
+import type { NextConfig } from 'next';
+import { config } from './env';
+
+config();
+
+const nextConfig: NextConfig = {
+	poweredByHeader: false,
+	async headers() {
+		return [
+			{
+				source: '/(.*?)',
+				headers: [
+					{
+						key: 'Strict-Transport-Security',
+						value: 'max-age=63072000; includeSubDomains; preload',
+					},
+					{
+						key: 'X-Frame-Options',
+						value: 'DENY',
+					},
+					{
+						key: 'X-DNS-Prefetch-Control',
+						value: 'on',
+					},
+					{
+						key: 'X-XSS-Protection',
+						value: '1; mode=block',
+					},
+					{
+						key: 'X-Content-Type-Options',
+						value: 'nosniff',
+					},
+					{
+						key: 'Referrer-Policy',
+						value: 'strict-origin-when-cross-origin',
+					},
+				],
+			},
+		];
+	},
+	compiler: {
+		removeConsole:
+			process.env['NODE_ENV'] === 'production'
+				? {
+						exclude: ['error'],
+					}
+				: false,
+	},
+	logging: {
+		fetches: {
+			fullUrl: true,
+		},
+	},
+	experimental: {
+		authInterrupts: true,
+	},
+};
+
+export default nextConfig;
+```
+
+Do not require this exact object shape, but verify the same intent:
+
+- env validation is invoked before exporting the config
+- `poweredByHeader` is disabled
+- important security headers are set deliberately
+- production console removal is configured intentionally
+- fetch logging is enabled when it helps debugging
+- experimental flags, if present, are intentional and understood
+
+Explain the purpose of each setting when reporting:
+
+- `config()`
+  - validates env during config load so broken env is caught before boot or build continues
+- `poweredByHeader: false`
+  - removes the default `x-powered-by` header and slightly reduces unnecessary framework disclosure
+- `headers()`
+  - centralizes security-related response headers instead of relying on ad hoc per-route behavior
+- `Strict-Transport-Security`
+  - enforces HTTPS for supported browsers and should usually exist in production-facing services behind HTTPS
+- `X-Frame-Options: DENY`
+  - blocks clickjacking via framing unless the product explicitly needs embedding
+- `X-DNS-Prefetch-Control: on`
+  - allows DNS prefetch behavior to be explicit rather than accidental
+- `X-XSS-Protection`
+  - mostly legacy, so if present it should be a conscious compatibility choice rather than cargo cult
+- `X-Content-Type-Options: nosniff`
+  - prevents MIME sniffing and is a low-cost default hardening header
+- `Referrer-Policy: strict-origin-when-cross-origin`
+  - limits referrer leakage while keeping reasonable analytics/debugging behavior
+- `compiler.removeConsole`
+  - strips noisy console calls from production bundles while usually preserving `console.error`
+- `logging.fetches.fullUrl`
+  - makes fetch debugging easier during development and incident investigation; confirm the team wants the extra verbosity
+- `experimental.authInterrupts`
+  - should only be enabled when the team understands and intentionally uses the related Next.js capability
+
+When the repo diverges from this baseline, explain whether the difference looks intentional, outdated, or simply missing.
+
 ## Output format
 
 Use this structure unless the user asks for something else:
@@ -258,6 +364,7 @@ Use this structure unless the user asks for something else:
 - `.env.sample`
 - env typing
 - Route Handler `RouteContext`
+- `next.config.*`
 
 For each item, mark one of:
 
