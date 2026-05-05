@@ -92,9 +92,14 @@ runs:
       shell: bash
 ```
 
+If the repo uses `npm run setup`, also check what that script does in `package.json`.
+
+One good pattern is using it to run `corepack enable` so the expected package manager can be activated consistently before install steps.
+
 Do not require this exact script sequence, but prefer the same intent:
 
 - Node version comes from `.node-version`
+- package manager activation is explicit, for example via `corepack enable`
 - pnpm setup is shared
 - dependency cache is enabled
 - local bootstrap steps are reusable across workflows

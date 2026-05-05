@@ -243,6 +243,12 @@ For Vitest, prefer one helper that:
 - truncates after each test
 - shuts down after all tests
 
+Prefer keeping these shared files under `tests/`, for example:
+
+- `tests/db.setup.ts`
+- `tests/vitest.helper.ts`
+- `tests/vitest.setup.ts`
+
 Representative shape:
 
 ```ts
@@ -250,7 +256,7 @@ import { afterAll, afterEach, vi } from 'vitest';
 
 export async function setup() {
 	const { db, truncate, down } = await vi.hoisted(async () => {
-		const { setupDB } = await import('../../../tests/db.setup');
+		const { setupDB } = await import('./db.setup');
 		return await setupDB({ port: 'random' });
 	});
 
@@ -290,7 +296,7 @@ Representative shape:
 ```ts
 import { describe, expect, test } from 'vitest';
 import { groups, groupMembers, groupQuestionPresets } from '@/db/schema';
-import { setup } from '../../../../../tests/vitest.helper';
+import { setup } from '@/tests/vitest.helper';
 
 // import after vitest helper setup when module state depends on mocks
 import { GET } from './route';
@@ -451,6 +457,7 @@ export default defineConfig(async () => {
 
 - `package.json` test scripts explicitly run with `NODE_ENV=test` when the project depends on env-based test config
 - `config()` runs before exporting the Vitest config
+- shared Vitest helpers live in stable paths such as `tests/vitest.helper.ts` and `tests/vitest.setup.ts`
 - `globalSetup` exists when shared bootstrapping is needed
 - `environment` is chosen intentionally (`jsdom` vs `node`)
 - mock reset/restore behavior is explicit
