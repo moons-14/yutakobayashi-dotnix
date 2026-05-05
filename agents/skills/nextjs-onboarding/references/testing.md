@@ -29,6 +29,7 @@ This file is easiest to read in this order:
    - `Suggested directory structure`
    - `Test users and setup project`
    - `Playwright configuration`
+   - `CI workflow`
    - `Parallel Playwright with real DB`
    - `Authenticated user setup`
    - `Page object / model structure`
@@ -631,6 +632,131 @@ export default defineConfig({
 - browser projects depend on setup explicitly
 - `fullyParallel` is only enabled when worker isolation is actually safe
 - headed/headless defaults look intentional for the team’s workflow
+
+## CI workflow
+
+If the repo already has `lint`, `fmt`, `test`, and `test:e2e`, prefer a CI workflow that runs those layers explicitly instead of hiding everything behind one opaque script.
+
+Representative `github/workflows/ci.yml` for a single-repo Next.js project:
+
+```yaml
+name: ci
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - .github/workflows/ci.yml
+      - package.json
+      - src/**
+      - e2e/**
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/ci.yml
+      - package.json
+      - src/**
+      - e2e/**
+
+jobs:
+  code-quality:
+    name: Code Quality
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node
+      - run: pnpm lint
+      - run: pnpm fmt
+
+  unit-test:
+    name: Unit Test
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node
+      - run: pnpm test
+
+  e2e-test:
+    name: E2E Test
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-db
+      - run: pnpm exec playwright install chromium
+      - run: pnpm build
+      - run: pnpm test:e2e
+```
+
+If the repo is a monorepo, adapt commands with workspace filters or `pnpm --dir`. For a single repo, prefer the simpler direct commands.
+
+Representative `.github/actions/setup-db/action.yml`:
+
+```yaml
+name: Setup DB
+description: 'Set up Testcontainers'
+runs:
+  using: composite
+  steps:
+    - run: pnpm db:up && pnpm db:push
+      shell: bash
+```
+
+Representative `package.json` script:
+
+```json
+{
+	"scripts": {
+		"db:up": "docker compose up -d db"
+	}
+}
+```
+
+### What to check
+
+- workflow triggers are scoped intentionally with `paths`
+- draft pull requests do not burn CI minutes unnecessarily
+- permissions are explicit at workflow and job level
+- Node bootstrap is centralized in `.github/actions/setup-node`
+- DB bootstrap is centralized in `.github/actions/setup-db` when e2e depends on a real database
+- code quality, unit tests, and e2e are separated into distinct jobs
+- e2e installs the browser explicitly and builds before running
+- single-repo workflows do not carry unnecessary `pnpm --dir` indirection
+- custom runners are paired with `.github/actionlint.yaml` so workflow linting stays accurate
 
 ## Parallel Playwright with real DB
 
