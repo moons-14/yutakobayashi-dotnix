@@ -17,13 +17,13 @@ If the repo mocks the database heavily, do not automatically call that wrong. Bu
 
 ## Real DB integration tests with Testcontainers
 
-When the repo uses Prisma and PostgreSQL, a strong pattern is:
+When the repo uses PostgreSQL with a real application database layer, a strong pattern is:
 
 1. Start a disposable database container per suite or worker.
 2. Bind Postgres to a dynamic host port.
 3. Generate a per-run `DATABASE_URL`.
 4. Run schema setup against that URL.
-5. Instantiate `PrismaClient` with the overridden datasource URL.
+5. Instantiate the database client against the overridden URL.
 6. Truncate between tests.
 7. Tear everything down after the suite finishes.
 
@@ -32,6 +32,9 @@ When the repo uses Prisma and PostgreSQL, a strong pattern is:
 If `compose.yml` is reused for tests, prefer making the database port overrideable:
 
 ```yaml
+volumes:
+  db-data:
+
 services:
   db:
     image: postgres:17
@@ -41,24 +44,86 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DATABASE_DB}
+    # https://admin.alyfoods.com/blog/testcontainers-volume-mount-failure-debugging
+    # volumes:
+    #   - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 1s
+      timeout: 5s
+      retries: 10
 ```
 
 This allows normal development to keep `5432`, while tests can inject `DATABASE_PORT=0` or another dynamic port.
+
+Prefer keeping the persistent volume commented out or otherwise disabled for the Testcontainers path when volume mounts are known to cause instability in disposable test environments.
+
+The healthcheck matters because it gives the app and test harness a stronger readiness signal than “container started.”
 
 ### DB setup helper
 
 Prefer a shared helper rather than duplicating setup in every suite.
 
+Also prefer centralizing database URL construction in one helper instead of rebuilding connection strings ad hoc across tests and app code.
+
 Representative shape:
+
+```ts
+export function createDBUrl({
+	user = process.env.DATABASE_USER,
+	password = process.env.DATABASE_PASSWORD,
+	host = process.env.DATABASE_HOST,
+	port = Number(process.env.DATABASE_PORT),
+	db = process.env.DATABASE_DB,
+	schema = process.env.DATABASE_SCHEMA,
+}: {
+	user?: string;
+	password?: string;
+	host?: string;
+	port?: number;
+	db?: string;
+	schema?: string;
+}) {
+	return `postgresql://${user}:${password}@${host}:${port}/${db}?schema=${schema}`;
+}
+```
+
+### What to check
+
+- Compose or container setup supports dynamic port assignment.
+- `healthcheck` exists and the test setup waits for actual readiness.
+- DB URL construction is centralized instead of duplicated.
+- The database client is created from the dynamic URL, not a default local URL.
+- Schema setup runs against the dynamically created DB, not the developer DB.
+- Cleanup is automatic.
+- `truncate` is centralized and not copy-pasted across suites.
+
+## Drizzle variant
+
+If the repo uses Drizzle instead of Prisma, the same isolation pattern still applies:
+
+1. start a disposable Postgres container
+2. build a dynamic DB URL
+3. run schema setup against that URL
+4. construct a DB client against that URL
+5. reset state between tests
+6. tear everything down cleanly
+
+Representative shape for a non-monorepo project:
 
 ```ts
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
+import { reset } from 'drizzle-seed';
+import { Pool } from 'pg';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
-import { createDBUrl } from '../src/app/_utils/db';
+import * as schema from './schema';
+import { createDBUrl } from '@/utils/db';
 
 const execAsync = promisify(exec);
+
+export type Database = NodePgDatabase<typeof schema>;
 
 export async function setupDB({ port }: { port: 'random' | number }) {
 	const container = await new DockerComposeEnvironment('.', 'compose.yml')
@@ -68,7 +133,6 @@ export async function setupDB({ port }: { port: 'random' | number }) {
 		})
 		.withWaitStrategy('db', Wait.forListeningPorts())
 		.up(['db']);
-
 	const dbContainer = container.getContainer('db-1');
 	const mappedPort = dbContainer.getMappedPort(5432);
 	const url = createDBUrl({
@@ -76,58 +140,84 @@ export async function setupDB({ port }: { port: 'random' | number }) {
 		port: mappedPort,
 	});
 
-	await execAsync(`DATABASE_URL=${url} npx prisma db push`);
+	await execAsync(`DATABASE_URL=${url} drizzle-kit push`);
 
-	const prisma = new PrismaClient({
-		datasources: {
-			db: {
-				url,
-			},
-		},
-	});
+	const pool = new Pool({ connectionString: url });
+	const db = drizzle(pool, { schema });
 
 	async function down() {
-		await prisma.$disconnect();
+		await pool.end();
 		await container.down();
 	}
 
-	return <const>{
+	return {
+		url,
 		container,
 		port: mappedPort,
-		url,
-		prisma,
-		truncate: () => truncate(prisma),
+		db,
+		truncate: () => truncate(db),
 		down,
 		async [Symbol.asyncDispose]() {
 			await down();
 		},
-	};
+	} as const;
 }
 
-export async function truncate(prisma: PrismaClient) {
-	const tableNames = Prisma.dmmf.datamodel.models.map((model) => {
-		return model.dbName || model.name.toLowerCase();
-	});
-	const truncateQuery = `TRUNCATE TABLE ${tableNames.map((name) => `"${name}"`).join(', ')} CASCADE`;
-
-	await prisma.$executeRawUnsafe(truncateQuery);
+async function truncate(db: Database) {
+	await reset(db, schema);
 }
 ```
 
 ### What to check
 
-- Compose or container setup supports dynamic port assignment.
-- Prisma datasource URL is overridden at client creation time.
-- Schema setup runs against the dynamically created DB, not the developer DB.
-- Cleanup is automatic.
-- `truncate` is centralized and not copy-pasted across suites.
+- `drizzle-kit push` or the project's equivalent schema command runs against the dynamic `DATABASE_URL`
+- `Pool` is created from the dynamic URL, not a default local URL
+- `drizzle(...)` is built once per isolated DB instance
+- cleanup closes the PG pool and tears down the container
+- reset uses a centralized helper such as `drizzle-seed` `reset`
+
+### Helper tests
+
+If helpers like `createDBUrl` exist, prefer testing them directly.
+
+Representative shape:
+
+```ts
+import { describe, expect, test } from 'vitest';
+import { createDBUrl } from './db';
+
+describe('utils/db', () => {
+	describe('createDBUrl', () => {
+		test('should create url by environment variables', () => {
+			expect(createDBUrl({})).toMatchInlineSnapshot(
+				`"postgresql://local:1234@localhost:5432/local?schema=public"`,
+			);
+		});
+
+		test('should create url by params', () => {
+			expect(
+				createDBUrl({
+					user: 'user',
+					password: 'password',
+					host: 'host',
+					port: 5432,
+					db: 'db',
+					schema: 'schema',
+				}),
+			).toMatchInlineSnapshot(`"postgresql://user:password@host:5432/db?schema=schema"`);
+		});
+	});
+});
+```
+
+This is small, but it matters. If the project relies on dynamic DB URLs for test isolation, bugs in that helper can invalidate the whole setup.
 
 ## Vitest pattern
 
 For Vitest, prefer one helper that:
 
 - hoists DB setup before imports that depend on Prisma
-- mocks the app’s Prisma client to the isolated test client
+- mocks the app’s database client to the isolated test client
 - truncates after each test
 - shuts down after all tests
 
@@ -137,13 +227,13 @@ Representative shape:
 import { afterAll, afterEach, vi } from 'vitest';
 
 export async function setup() {
-	const { prisma, truncate, down } = await vi.hoisted(async () => {
+	const { db, truncate, down } = await vi.hoisted(async () => {
 		const { setupDB } = await import('../../../tests/db.setup');
 		return await setupDB({ port: 'random' });
 	});
 
-	vi.mock('../_clients/prisma', () => ({
-		prisma,
+	vi.mock('../_clients/db', () => ({
+		db,
 	}));
 
 	afterAll(async () => {
@@ -154,18 +244,18 @@ export async function setup() {
 		await truncate();
 	});
 
-	return <const>{
-		prisma,
+	return {
+		db,
 		truncate,
 		down,
-	};
+	} as const;
 }
 ```
 
 ### What to check
 
 - `vi.hoisted` is used when import timing requires it.
-- The test client replaces the production Prisma client cleanly.
+- The test client replaces the production database client cleanly.
 - Per-test cleanup is `truncate`, not full process restart.
 - Each suite has isolated DB state.
 
