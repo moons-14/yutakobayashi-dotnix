@@ -1243,3 +1243,10 @@ Prefer:
 - one short scenario per example
 
 Avoid domain-heavy naming unless the domain itself is what the skill is teaching.
+
+## Additional references
+
+- hiroppy: Testcontainers parallel tests
+  https://hiroppy.me/blog/posts/testcontainers-parallel-tests
+- hiroppy: Isolated e2e
+  https://hiroppy.me/blog/posts/isolated-e2e
