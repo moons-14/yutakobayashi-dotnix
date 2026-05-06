@@ -72,3 +72,4 @@ The goal is not a long essay. The goal is a durable record of what was decided, 
 - Use `references/template.md` for the standard ADR shapes and section guidance.
 - Use `references/location.md` for recommended in-repo ADR placement, naming, and monorepo conventions.
 - Use `references/readme-template.md` only when the repo wants a lightweight `docs/adr/README.md` scaffold.
+- Use the external references listed in `references/template.md` when the user wants public ADR guidance or template sources.

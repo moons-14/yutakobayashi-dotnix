@@ -81,3 +81,10 @@ Use this when the reader needs to see explicit tradeoffs or when several alterna
 - `Decision`: lead with the final answer, not the build-up.
 - `Consequences`: include both upside and cost. An ADR that only sells the benefits is incomplete.
 - `Adoption and Exceptions`: focus on enforceable mechanics, not slogans.
+
+## External references
+
+- AWS Prescriptive Guidance FAQ:
+  `https://docs.aws.amazon.com/ja_jp/prescriptive-guidance/latest/architectural-decision-records/faq.html#q2`
+- ADR GitHub organization, existing templates and related guidance:
+  `https://adr.github.io/#existing-adr-templates`
