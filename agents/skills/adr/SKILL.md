@@ -26,6 +26,13 @@ The goal is not a long essay. The goal is a durable record of what was decided, 
 - Capturing security, privacy, reliability, performance, or auditability decisions.
 - Formalizing an engineering process that changes how code is reviewed, shipped, or operated.
 
+## ADR vs Design Doc
+
+- Use an ADR when the core deliverable is a durable decision: what was chosen, why it beat the alternatives, what consequences follow, and how the team will enforce it.
+- Use a design doc when the core deliverable is implementation design: architecture shape, component flow, data model, rollout plan, operational detail, and open implementation questions.
+- If the user brings a large solution proposal, extract the irreversible or standard-setting decisions into ADRs and leave the execution detail in the design doc.
+- If only one artifact will exist, bias toward an ADR when the long-term value is decision history, and bias toward a design doc when the long-term value is build guidance.
+
 ## Workflow
 
 ### 1. Frame the decision
@@ -63,6 +70,5 @@ The goal is not a long essay. The goal is a durable record of what was decided, 
 ## Reference routing
 
 - Use `references/template.md` for the standard ADR shapes and section guidance.
-- Use `references/examples.md` for representative decision types and framing patterns.
 - Use `references/location.md` for recommended in-repo ADR placement, naming, and monorepo conventions.
 - Use `references/readme-template.md` only when the repo wants a lightweight `docs/adr/README.md` scaffold.
