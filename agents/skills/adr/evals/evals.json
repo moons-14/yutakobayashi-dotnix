@@ -1,0 +1,35 @@
+{
+	"skill_name": "adr",
+	"evals": [
+		{
+			"id": 1,
+			"prompt": "Write a short ADR draft for moving CSV date validation out of individual UIs and into a shared backend layer. The main reason is that import paths are growing and validation gaps are becoming likely.",
+			"expected_output": "Uses the default ADR structure with clear status, context, decision, consequences, and an adoption path that keeps backend validation as the source of truth.",
+			"files": []
+		},
+		{
+			"id": 2,
+			"prompt": "Draft an ADR for handling temporary CSV files that contain personal data. The team wants encrypted temporary storage by default, deletion after processing, and an explicit exception path for plaintext retention.",
+			"expected_output": "Frames the issue as a security and data-handling decision, includes tradeoffs, and defines enforcement plus exception handling.",
+			"files": []
+		},
+		{
+			"id": 3,
+			"prompt": "Capture an ADR for standardizing public integration APIs on REST + OpenAPI because the number of external consumers is growing and compatibility management now matters.",
+			"expected_output": "Explains the contract standard, why compatibility management drives the choice, and how API changes will be enforced in review or CI.",
+			"files": []
+		},
+		{
+			"id": 4,
+			"prompt": "Turn this dependency choice into an ADR: choose between Drizzle and Prisma for an existing Electron + SQLite codebase, with type safety, team learning cost, and migration effort as the main decision drivers.",
+			"expected_output": "Uses either the default or expanded template to compare options, state the chosen direction, and define how exceptions to the standard will be approved.",
+			"files": []
+		},
+		{
+			"id": 5,
+			"prompt": "Create an ADR for requiring ADR review before implementation on cross-team feature work. The goal is to reduce repeated decision churn and force alignment before code is written.",
+			"expected_output": "Covers the process rationale, the scope of the rule, the operational review path, and what exceptions are allowed.",
+			"files": []
+		}
+	]
+}
