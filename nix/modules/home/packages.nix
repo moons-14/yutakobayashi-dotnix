@@ -62,6 +62,7 @@ in
       stable.yt-dlp
       halloy
       immich-go
+      luanti
       nostui
       obsidian
       unar
