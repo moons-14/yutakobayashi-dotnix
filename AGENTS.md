@@ -46,11 +46,15 @@ flake.nix                          # エントリポイント
 │   │   ├── X870-Stell-Legend-WiFi/ # NixOS-WSL (x86_64-linux)
 │   │   │   ├── default.nix        # モジュール構成
 │   │   │   └── hardware-configuration.nix  # WSL設定, hostname
+│   │   ├── pi5/                   # NixOS (aarch64-linux, headless Raspberry Pi 5)
+│   │   │   ├── default.nix        # モジュール構成
+│   │   │   └── hardware-configuration.nix  # boot, network, filesystem
 │   │   └── M2-MacBook-Air/        # macOS (aarch64-darwin)
 │   │       └── default.nix        # ホスト名設定
 │   ├── profiles/                  # プロファイル定義
 │   │   ├── cli-minimal.nix        # 最小CLI環境
 │   │   ├── cli.nix                # CLI環境（docker, tailscale含む）
+│   │   ├── pi5.nix                # headless Pi 5環境
 │   │   ├── gui.nix                # GUI環境（niri, audio, bluetooth含む）
 │   │   └── darwin.nix             # macOS環境
 │   ├── modules/

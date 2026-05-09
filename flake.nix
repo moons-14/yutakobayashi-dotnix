@@ -21,6 +21,9 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+    };
     llm-agents.url = "github:numtide/llm-agents.nix";
     nix-steipete-tools.url = "github:openclaw/nix-steipete-tools";
     gh-nippou = {
@@ -220,6 +223,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
+        "aarch64-linux"
         "aarch64-darwin"
       ];
 
@@ -361,6 +365,7 @@
         nixosConfigurations = {
           UM790-Pro = import ./nix/hosts/UM790-Pro { inherit inputs mkPkgs; };
           X870-Stell-Legend-WiFi = import ./nix/hosts/X870-Stell-Legend-WiFi { inherit inputs mkPkgs; };
+          pi5 = import ./nix/hosts/pi5 { inherit inputs mkPkgs; };
         };
 
         darwinConfigurations = {

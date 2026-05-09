@@ -8,6 +8,7 @@
 | ---------------------- | ---------------------- | ---------------------- | -------------- | ------ |
 | UM790 Pro              | UM790-Pro              | NixOS                  | x86_64-linux   | ◎      |
 | X870 Stell Legend WiFi | X870-Stell-Legend-WiFi | NixOS (WSL)            | x86_64-linux   | ◎      |
+| Pi 5                   | pi5                    | NixOS                  | aarch64-linux  | △      |
 | M2 MacBook Air         | M2-MacBook-Air         | macOS                  | aarch64-darwin | ◎      |
 | Galaxy S23 FE          | Galaxy-S23FE           | Android (nix-on-droid) | aarch64-linux  | △      |
 
@@ -19,12 +20,14 @@ flake.nix                    # Entry point (nixos + darwin + nixOnDroid Configur
 │   ├── hosts/
 │   │   ├── UM790-Pro/           # NixOS host config (boot, network, locale)
 │   │   ├── X870-Stell-Legend-WiFi/   # NixOS-WSL host config (WSL, locale)
+│   │   ├── pi5/                 # NixOS host config (headless Pi 5)
 │   │   ├── M2-MacBook-Air/      # macOS host config
 │   │   └── Galaxy-S23FE/        # nix-on-droid host config
 │   ├── profiles/
 │   │   ├── cli-minimal.nix  # Minimal CLI environment
 │   │   ├── cli.nix          # CLI environment (docker, tailscale)
 │   │   ├── cli-server.nix   # Server CLI environment (docker, no tailscale)
+│   │   ├── pi5.nix          # Headless Pi 5 environment
 │   │   ├── gui.nix          # GUI environment (niri, audio, bluetooth)
 │   │   ├── laptop.nix       # Laptop environment (gui + extras)
 │   │   └── darwin.nix       # macOS environment
@@ -43,6 +46,7 @@ flake.nix                    # Entry point (nixos + darwin + nixOnDroid Configur
 
 - [docs/UM790Pro.md](docs/UM790Pro.md) - NixOS installation guide
 - [docs/X870-Stell-Legend-WiFi.md](docs/X870-Stell-Legend-WiFi.md) - NixOS-WSL installation guide
+- [docs/Pi5.md](docs/Pi5.md) - NixOS installation guide for Raspberry Pi 5
 - [docs/M2-MacBook-Air.md](docs/M2-MacBook-Air.md) - nix-darwin installation guide for macOS
 - [docs/Galaxy-S23FE.md](docs/Galaxy-S23FE.md) - nix-on-droid installation guide for Android
 
