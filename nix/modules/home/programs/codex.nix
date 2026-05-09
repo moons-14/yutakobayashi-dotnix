@@ -29,8 +29,6 @@ let
       "spreadsheets@openai-primary-runtime".enabled = true;
       "presentations@openai-primary-runtime".enabled = true;
     };
-
-    notice.model_migrations."gpt-5.2-codex" = "gpt-5.4";
   };
   codexConfig = tomlFormat.generate "codex-config" settings;
 in

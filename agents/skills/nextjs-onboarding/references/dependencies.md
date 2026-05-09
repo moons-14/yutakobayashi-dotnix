@@ -6,19 +6,20 @@ This is a preference guide, not a literal npm deprecation list. Several packages
 
 ## Preferred replacements
 
-| Avoid by default          | Prefer                                       | Why                                                                                                                                                                   |
-| ------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm` / `yarn`            | `pnpm`                                       | Prefer stronger workspace ergonomics, overrides, and supply-chain-oriented settings like `minimumReleaseAge`.                                                         |
-| `pnpm` without checks     | `pnpm` + `pnpm audit` + `sherif`             | Prefer explicit dependency-audit and monorepo-drift checks instead of trusting package-manager defaults alone.                                                        |
-| stale `next`              | latest stable `next`                         | Prefer current stable Next.js because App Router / RSC security advisories keep landing.                                                                              |
-| `tsup`                    | `tsdown`                                     | Prefer the newer Rolldown-based bundler when starting fresh, especially if a smooth migration path from tsup matters.                                                 |
-| `jest` / `mocha`          | `vitest`                                     | Prefer faster Vite-native test workflows and a smoother path to browser mode.                                                                                         |
-| `cypress`                 | `playwright` or `vitest` browser mode        | Prefer Playwright for broad e2e/browser automation, or Vitest browser mode when the need is browser-native component/integration testing rather than full e2e.        |
-| `axios`                   | `fetch`                                      | Prefer the platform standard when browser and Node already provide it. Fewer dependencies and less wrapper code.                                                      |
-| `dayjs`                   | `Temporal` / polyfill first, then `date-fns` | Prefer the emerging standard date/time model first; if that is not practical, prefer pure modular utilities with strong TypeScript support.                           |
-| `lodash`                  | `es-toolkit` or remove entirely              | Prefer native JS first; if helpers are still needed, prefer a modern utility library with smaller footprint and a Lodash compatibility path.                          |
-| `remark` / `remark-parse` | `micromark`                                  | If the task is mainly markdown parsing/rendering rather than AST transforms, prefer the lower-level parser the unified ecosystem itself recommends for that use case. |
-| `@chakra-ui/react`        | `shadcn/ui`                                  | Prefer open-code components you own and edit directly instead of a large packaged component library by default.                                                       |
+| Avoid by default                   | Prefer                                       | Why                                                                                                                                                                   |
+| ---------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm` / `yarn`                     | `pnpm`                                       | Prefer stronger workspace ergonomics, overrides, and supply-chain-oriented settings like `minimumReleaseAge`.                                                         |
+| `pnpm` without checks              | `pnpm` + `pnpm audit` + `sherif`             | Prefer explicit dependency-audit and monorepo-drift checks instead of trusting package-manager defaults alone.                                                        |
+| stale `next`                       | latest stable `next`                         | Prefer current stable Next.js because App Router / RSC security advisories keep landing.                                                                              |
+| `tsup`                             | `tsdown`                                     | Prefer the newer Rolldown-based bundler when starting fresh, especially if a smooth migration path from tsup matters.                                                 |
+| `jest` / `mocha`                   | `vitest`                                     | Prefer faster Vite-native test workflows and a smoother path to browser mode.                                                                                         |
+| `cypress`                          | `playwright` or `vitest` browser mode        | Prefer Playwright for broad e2e/browser automation, or Vitest browser mode when the need is browser-native component/integration testing rather than full e2e.        |
+| manual URL search param state sync | `nuqs`                                       | Prefer type-safe query state with a `useState`-like API when Next.js UI state needs to live in the URL without ad hoc parser/serializer plumbing.                     |
+| `axios`                            | `fetch`                                      | Prefer the platform standard when browser and Node already provide it. Fewer dependencies and less wrapper code.                                                      |
+| `dayjs`                            | `Temporal` / polyfill first, then `date-fns` | Prefer the emerging standard date/time model first; if that is not practical, prefer pure modular utilities with strong TypeScript support.                           |
+| `lodash`                           | `es-toolkit` or remove entirely              | Prefer native JS first; if helpers are still needed, prefer a modern utility library with smaller footprint and a Lodash compatibility path.                          |
+| `remark` / `remark-parse`          | `micromark`                                  | If the task is mainly markdown parsing/rendering rather than AST transforms, prefer the lower-level parser the unified ecosystem itself recommends for that use case. |
+| `@chakra-ui/react`                 | `shadcn/ui`                                  | Prefer open-code components you own and edit directly instead of a large packaged component library by default.                                                       |
 
 ## Guidance by package
 
@@ -230,6 +231,19 @@ What matters:
 
 ## Runtime and library choices
 
+## manual URL search param state sync -> `nuqs`
+
+Prefer `nuqs` when a Next.js app intentionally stores interactive UI state in the URL.
+
+What matters:
+
+- `nuqs` provides type-safe parsers and serializers for search params
+- it keeps a familiar `useState`-like API instead of scattering `URLSearchParams` plumbing across components
+- it supports Next.js App Router and Pages Router, including server-side parsing patterns
+- it keeps URL-backed state ergonomic without inventing project-local wrappers too early
+
+Do not force `nuqs` everywhere. If the page only reads one or two params once on the server, plain `searchParams` handling can stay simpler. Prefer `nuqs` when the app has real client-side query state that needs to round-trip cleanly between URL, components, and sometimes server rendering.
+
 ## `axios` -> `fetch`
 
 Prefer `fetch` unless the project has a concrete need for Axios-specific features.
@@ -331,6 +345,7 @@ Do not recommend churn just for ideology. Prefer replacements when at least one 
 These preferences are based on a mix of official package documentation and ecosystem inference.
 
 - `fetch`: Node.js documents `fetch` as a stable, browser-compatible global.
+- `nuqs`: the project documents type-safe search param state for Next.js and other React routers, plus server/client integration patterns.
 - `axios`: Axios documents itself as a separate HTTP client with its own API/features, which is why it should only be kept when those features are actually needed.
 - `Temporal`: TC39 documents Temporal as the standard direction for working with dates and times, and the official ecosystem points to production polyfills.
 - `date-fns`: the project documents modularity, pure functions, TypeScript support, and first-class time zone support.
@@ -346,6 +361,7 @@ These preferences are based on a mix of official package documentation and ecosy
 ## Primary sources
 
 - Node.js globals / `fetch`: https://nodejs.org/api/globals.html
+- nuqs docs: https://nuqs.dev/
 - Temporal proposal: https://github.com/tc39/proposal-temporal
 - Temporal polyfill: https://github.com/js-temporal/temporal-polyfill
 - Axios docs: https://axios-http.com/docs/intro
