@@ -72,7 +72,7 @@ nix flake update
 
 ### macOS
 
-- `nix run .#switch` - Build and apply nix-darwin + Home Manager configuration (`darwin-rebuild switch`)
+- `nix run .#switch` - Build and apply nix-darwin + Home Manager configuration (`sudo darwin-rebuild switch`)
 - `nix run .#build` - Build configuration without applying
 - `nix run .#fmt` - Format configured file types (Nix, Lua, shell, TOML, Python, etc.) via [treefmt](https://github.com/numtide/treefmt-nix)
 

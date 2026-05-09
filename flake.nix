@@ -236,7 +236,6 @@
         }:
         let
           isDarwin = builtins.match ".*-darwin" pkgs.stdenv.hostPlatform.system != null;
-          darwinHostname = "M2-MacBook-Air";
           nom = "${pkgs.nix-output-monitor}/bin/nom";
           allPkgs = mkPkgs pkgs.stdenv.hostPlatform.system;
         in
@@ -264,8 +263,9 @@
                   ${
                     if isDarwin then
                       ''
-                        echo "Building darwin configuration..."
-                        ${nom} build ".#darwinConfigurations.${darwinHostname}.system"
+                        HOSTNAME="$(hostname)"
+                        echo "Building darwin configuration for $HOSTNAME..."
+                        ${nom} build ".#darwinConfigurations.$HOSTNAME.system"
                       ''
                     else
                       ''
@@ -286,8 +286,9 @@
                   ${
                     if isDarwin then
                       ''
-                        echo "Switching to darwin configuration..."
-                        darwin-rebuild switch --flake ".#${darwinHostname}" |& ${nom}
+                        HOSTNAME="$(hostname)"
+                        echo "Switching to darwin configuration for $HOSTNAME..."
+                        sudo darwin-rebuild switch --flake ".#$HOSTNAME" |& ${nom}
                       ''
                     else
                       ''
