@@ -1,10 +1,6 @@
-# Agent skills configuration for Claude Code
-# https://github.com/Kyure-A/agent-skills-nix
-#
-# All skills (local and external) are managed here via agent-skills-nix.
-# Skills are deployed to enabled agent-skills-nix built-in targets.
 {
   pkgs,
+  lib,
   inputs,
   local-skills,
   ...
@@ -13,61 +9,53 @@
   programs.agent-skills = {
     enable = true;
 
-    # Skill sources
     sources = {
-      # Local: skills from this dotfiles repo
       local = {
         path = local-skills;
         subdir = "agents/skills";
       };
-      # Anthropic: official skills from anthropics/skills
       anthropic = {
         path = inputs.anthropic-skills;
         subdir = "skills";
       };
-      # Vercel: skills from vercel-labs/skills
       vercel = {
         path = inputs.vercel-skills;
         subdir = "skills";
       };
-      # nextlevelbuilder: UI/UX Pro Max skill
       nextlevelbuilder = {
         path = inputs.ui-ux-pro-max-skill;
         subdir = ".claude/skills";
       };
-      # ast-grep: AST-based code search and transform skill
       ast-grep = {
         path = inputs.ast-grep-skill;
         subdir = "ast-grep/skills";
       };
-      # Deno: skills from denoland/skills
       deno = {
         path = inputs.deno-skills;
         subdir = "skills";
       };
-      # Obsidian: skills from kepano/obsidian-skills
       obsidian = {
         path = inputs.obsidian-skills;
         subdir = "skills";
       };
-      # repiq: OSS metrics CLI skill
       repiq = {
         path = inputs.repiq;
         subdir = "skills";
       };
-      # prompt-review: AI対話履歴分析スキル
       prompt-review = {
         path = inputs.prompt-review-skill;
         subdir = ".claude/skills";
       };
-      # difit: skills from yoshiko-pg/difit
       difit = {
         path = inputs.difit-skills;
         subdir = "skills";
       };
+      agent-browser = {
+        path = inputs.agent-browser-skill;
+        subdir = "skills";
+      };
     };
 
-    # Enable all local skills
     skills.enableAll = [
       "local"
       "cloudflare"
@@ -79,9 +67,7 @@
       "difit"
     ];
 
-    # Enable specific Anthropic skills
     skills.explicit = {
-      # Document skills
       docx = {
         from = "anthropic";
         path = "docx";
@@ -98,7 +84,7 @@
         from = "anthropic";
         path = "xlsx";
       };
-      # Example skills
+
       frontend-design = {
         from = "anthropic";
         path = "frontend-design";
@@ -111,29 +97,73 @@
         from = "anthropic";
         path = "webapp-testing";
       };
-      # Vercel skills
+
       find-skills = {
         from = "vercel";
         path = "find-skills";
       };
-      # nextlevelbuilder skills
+
       ui-ux-pro-max = {
         from = "nextlevelbuilder";
         path = "ui-ux-pro-max";
       };
-      # ast-grep skills
-      ast-grep = {
-        from = "ast-grep";
-        path = "ast-grep";
-      };
-      # prompt-review skills
+
+      agent-browser =
+        let
+          agentBrowserBin = lib.getExe pkgs.llm-agents.agent-browser;
+        in
+        {
+          from = "agent-browser";
+          path = "agent-browser";
+          packages = [ pkgs.llm-agents.agent-browser ];
+          transform =
+            { original, ... }:
+            builtins.replaceStrings
+              [
+                "Bash(agent-browser:*), Bash(npx agent-browser:*)"
+                "Install: `npm i -g agent-browser && agent-browser install`\n\n"
+                "agent-browser skills "
+                "`agent-browser`"
+              ]
+              [
+                "Bash(${agentBrowserBin}:*)"
+                ""
+                "${agentBrowserBin} skills "
+                "`${agentBrowserBin}`"
+              ]
+              original;
+        };
+
+      ast-grep =
+        let
+          astGrepBin = lib.getExe pkgs.ast-grep;
+        in
+        {
+          from = "ast-grep";
+          path = "ast-grep";
+          packages = [ pkgs.ast-grep ];
+          transform =
+            { original, dependencies }:
+            let
+              patched =
+                builtins.replaceStrings
+                  [ "| ast-grep " "ast-grep scan " "ast-grep run " ]
+                  [ "| ${astGrepBin} " "${astGrepBin} scan " "${astGrepBin} run " ]
+                  original;
+            in
+            ''
+              ${patched}
+
+              ${dependencies}
+            '';
+        };
+
       prompt-review = {
         from = "prompt-review";
         path = "prompt-review";
       };
     };
 
-    # Deploy to built-in target directories.
     targets = {
       agents.enable = true;
       claude.enable = true;

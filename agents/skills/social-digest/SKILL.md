@@ -52,9 +52,7 @@ bun run {baseDir}/scripts/social-digest.ts \
 ## Quick command: fetch tweet by X URL / ID (FixTweet API)
 
 ```bash
-bun run {baseDir}/scripts/fxtweet.ts --url "https://x.com/jack/status/20?lang=ja"
-# or
-bun run {baseDir}/scripts/fxtweet.ts --id "20" --screen "jack" --lang "ja"
+curl "https://api.fxtwitter.com/jack/status/20"
 ```
 
 ## Tests

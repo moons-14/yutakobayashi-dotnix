@@ -20,6 +20,22 @@
         "type": "github"
       }
     },
+    "agent-browser-skill": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778168700,
+        "narHash": "sha256-NbIl24zbSqAbKbZcT5mGGgaUmT1FIwnUMMkMx+za0DU=",
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "rev": "82eadcee41240b1c8477870f846bc8528e77a8a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "agent-browser",
+        "type": "github"
+      }
+    },
     "agent-skills": {
       "inputs": {
         "home-manager": "home-manager",
@@ -1430,6 +1446,7 @@
     "root": {
       "inputs": {
         "actrun-overlay": "actrun-overlay",
+        "agent-browser-skill": "agent-browser-skill",
         "agent-skills": "agent-skills",
         "anthropic-skills": "anthropic-skills",
         "ast-grep-skill": "ast-grep-skill",

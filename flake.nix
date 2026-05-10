@@ -78,6 +78,10 @@
       url = "github:yoshiko-pg/difit";
       flake = false;
     };
+    agent-browser-skill = {
+      url = "github:vercel-labs/agent-browser";
+      flake = false;
+    };
     repiq = {
       url = "github:yutakobayashidev/repiq";
       inputs.nixpkgs.follows = "nixpkgs";
