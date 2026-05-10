@@ -9,6 +9,7 @@
     ./programs/dev-tools.nix
     ./programs/claude-code.nix
     ./programs/codex.nix
+    ./programs/opencode
     ./programs/chromium.nix
     ./programs/firefox.nix
     ./programs/git.nix
