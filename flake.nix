@@ -243,13 +243,25 @@
           ...
         }:
         let
-          isDarwin = builtins.match ".*-darwin" pkgs.stdenv.hostPlatform.system != null;
-          nom = "${pkgs.nix-output-monitor}/bin/nom";
-          allPkgs = mkPkgs pkgs.stdenv.hostPlatform.system;
+          system = pkgs.stdenv.hostPlatform.system;
+          isDarwin = builtins.match ".*-darwin" system != null;
+          localPkgs = mkPkgs system;
+          nom = "${localPkgs.nix-output-monitor}/bin/nom";
+
+          isAgentCheck = ''
+            IS_AI_AGENT=false
+            for var in CLAUDE_CODE CLAUDECODE CODEX_SANDBOX CODEX_THREAD_ID GEMINI_CLI OPENCODE AUGMENT_AGENT GOOSE_PROVIDER CURSOR_AGENT AI_AGENT; do
+              eval "val=\''${!var:-}"
+              if [ -n "$val" ]; then
+                IS_AI_AGENT=true
+                break
+              fi
+            done
+          '';
         in
         {
           packages = {
-            inherit (allPkgs)
+            inherit (localPkgs)
               difit
               git-now
               jj-desc
@@ -260,59 +272,85 @@
               roots
               similarity-ts
               tunnelto
+              waza
               ;
           };
+
           apps = {
             build = {
               type = "app";
               program = toString (
-                pkgs.writeShellScript "build" ''
+                localPkgs.writeShellScript "build" ''
                   set -e
+                  ${isAgentCheck}
+
+                  HOSTNAME="$(hostname)"
+
                   ${
                     if isDarwin then
                       ''
-                        HOSTNAME="$(hostname)"
                         echo "Building darwin configuration for $HOSTNAME..."
-                        ${nom} build ".#darwinConfigurations.$HOSTNAME.system"
+                        if [ "$IS_AI_AGENT" = true ]; then
+                          nix build ".#darwinConfigurations.$HOSTNAME.system"
+                        else
+                          ${nom} build ".#darwinConfigurations.$HOSTNAME.system"
+                        fi
                       ''
                     else
                       ''
-                        HOSTNAME="$(hostname)"
                         echo "Building NixOS configuration for $HOSTNAME..."
-                        ${nom} build ".#nixosConfigurations.$HOSTNAME.config.system.build.toplevel"
+                        if [ "$IS_AI_AGENT" = true ]; then
+                          nix build ".#nixosConfigurations.$HOSTNAME.config.system.build.toplevel"
+                        else
+                          ${nom} build ".#nixosConfigurations.$HOSTNAME.config.system.build.toplevel"
+                        fi
                       ''
                   }
+
                   echo "Build successful! Run 'nix run .#switch' to apply."
                 ''
               );
             };
+
             switch = {
               type = "app";
               program = toString (
-                pkgs.writeShellScript "switch" ''
+                localPkgs.writeShellScript "switch" ''
                   set -eo pipefail
+                  ${isAgentCheck}
+
+                  HOSTNAME="$(hostname)"
+
                   ${
                     if isDarwin then
                       ''
-                        HOSTNAME="$(hostname)"
                         echo "Switching to darwin configuration for $HOSTNAME..."
-                        sudo darwin-rebuild switch --flake ".#$HOSTNAME" |& ${nom}
+                        if [ "$IS_AI_AGENT" = true ]; then
+                          sudo darwin-rebuild switch --flake ".#$HOSTNAME"
+                        else
+                          sudo darwin-rebuild switch --flake ".#$HOSTNAME" |& ${nom}
+                        fi
                       ''
                     else
                       ''
-                        HOSTNAME="$(hostname)"
                         echo "Switching to NixOS configuration for $HOSTNAME..."
-                        sudo nixos-rebuild switch --flake ".#$HOSTNAME" |& ${nom}
+                        if [ "$IS_AI_AGENT" = true ]; then
+                          sudo nixos-rebuild switch --flake ".#$HOSTNAME"
+                        else
+                          sudo nixos-rebuild switch --flake ".#$HOSTNAME" |& ${nom}
+                        fi
                       ''
                   }
+
                   echo "Done!"
                 ''
               );
             };
+
             fmt = {
               type = "app";
               program = toString (
-                pkgs.writeShellScript "treefmt-wrapper" ''
+                localPkgs.writeShellScript "treefmt-wrapper" ''
                   exec ${config.treefmt.build.wrapper}/bin/treefmt "$@"
                 ''
               );
@@ -335,10 +373,38 @@
                 ];
               };
             };
-            settings.global.excludes = [
-              ".git/**"
-              "*.lock"
-            ];
+
+            settings = {
+              global.excludes = [
+                ".git/**"
+                "*.lock"
+              ];
+
+              formatter.gitleaks = {
+                command = "${localPkgs.gitleaks}/bin/gitleaks";
+                options = [
+                  "detect"
+                  "--no-git"
+                  "--exit-code"
+                  "0"
+                ];
+                includes = [ "*" ];
+                excludes = [
+                  "*.png"
+                  "*.jpg"
+                  "*.jpeg"
+                  "*.gif"
+                  "*.ico"
+                  "*.pdf"
+                  "*.woff"
+                  "*.woff2"
+                  "*.ttf"
+                  "*.eot"
+                  "node_modules/**"
+                  ".direnv/**"
+                ];
+              };
+            };
           };
 
           pre-commit = {
@@ -348,17 +414,10 @@
                 enable = true;
                 package = config.treefmt.build.wrapper;
               };
-              git-secrets = {
-                enable = true;
-                entry = "${pkgs.git-secrets}/bin/git-secrets --pre_commit_hook";
-                language = "system";
-                stages = [ "pre-commit" ];
-                excludes = [ "^\.direnv/" ];
-              };
             };
           };
 
-          devShells.default = pkgs.mkShell {
+          devShells.default = localPkgs.mkShell {
             shellHook = ''
               ${config.pre-commit.installationScript}
             '';

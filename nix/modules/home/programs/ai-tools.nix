@@ -15,5 +15,6 @@
     ])
     ++ (with pkgs; [
       continues
+      waza
     ]);
 }
