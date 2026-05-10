@@ -12,6 +12,7 @@
       cursor-agent
       agent-browser
       entire
+      spec-kit
     ])
     ++ (with pkgs; [
       continues
