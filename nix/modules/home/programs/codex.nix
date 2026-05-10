@@ -13,7 +13,7 @@ let
   settings = {
     approval_policy = "on-request";
     model = "gpt-5.5";
-    model_reasoning_effort = "high";
+    model_reasoning_effort = "medium";
     personality = "pragmatic";
     project_doc_fallback_filenames = [ "CLAUDE.md" ];
     web_search_request = true;

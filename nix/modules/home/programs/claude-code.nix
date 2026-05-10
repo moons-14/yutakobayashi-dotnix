@@ -68,6 +68,10 @@ in
       cleanupPeriodDays = 876000;
       includeCoAuthoredBy = false;
       language = "Japanese";
+      alwaysThinkingEnabled = true;
+      autoMemoryEnabled = false;
+      useAutoModeDuringPlan = true;
+      skipAutoPermissionPrompt = true;
       skipDangerousModePermissionPrompt = true;
       enableAllProjectMcpServers = true;
       plansDirectory = "./plans";
