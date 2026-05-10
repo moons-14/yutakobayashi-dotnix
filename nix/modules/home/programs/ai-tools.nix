@@ -6,7 +6,6 @@
       apm
       ccusage
       copilot-cli
-      opencode
       rtk
       vibe-kanban
       cursor-agent
