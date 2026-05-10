@@ -5,6 +5,7 @@ let
     home-manager
     nix-hazkey
     nix-filter
+    sops-nix
     ;
 
   system = "x86_64-linux";
@@ -24,7 +25,15 @@ nixpkgs.lib.nixosSystem {
   };
   modules = [
     home-manager.nixosModules.home-manager
+    sops-nix.nixosModules.sops
+    (
+      { username, ... }:
+      {
+        sops.age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
+      }
+    )
     ../../modules/linux
+    ../../modules/linux/hermes-agent
     ./hardware-configuration.nix
     ../../profiles/gui.nix
     { nixpkgs.pkgs = mkPkgs system; }

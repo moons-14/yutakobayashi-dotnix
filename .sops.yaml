@@ -1,0 +1,13 @@
+keys:
+  - &um790 age1u8ah2hga53uh7y24efhuc5vszzctqxth2rtvd7dshedpl9l50d5slzs6zq
+
+creation_rules:
+  - path_regex: nix/modules/linux/hermes-agent/secrets.yaml$
+    key_groups:
+      - age:
+          - *um790
+
+  - path_regex: nix/modules/linux/hermes-agent/(secrets\.yaml|auth\.json)$
+    key_groups:
+      - age:
+          - *um790
