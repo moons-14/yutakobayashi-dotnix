@@ -4,7 +4,7 @@
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-5
     ./hardware-configuration.nix
-    ../../../nix/modules/profiles/nixos/pi5.nix
+    ../../../nix/modules/profiles/nixos/cli-server.nix
     (
       { pkgs, ... }:
       {
