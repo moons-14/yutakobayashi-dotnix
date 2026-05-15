@@ -16,7 +16,7 @@
     ./../modules/linux/programs/niri.nix
     ./../modules/linux/programs/waybar.nix
     ./../modules/home/programs/ghostty
-    ./../modules/linux/programs/swayidle.nix
+    ./../modules/linux/services/swayidle.nix
     ./../modules/linux/programs/swaylock.nix
   ];
 }
