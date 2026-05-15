@@ -9,10 +9,6 @@
 
   nix.optimise.automatic = true;
 
-  security.sudo.extraConfig = ''
-    Defaults pwfeedback
-  '';
-
   nix.settings = {
     experimental-features = [
       "nix-command"

@@ -5,6 +5,7 @@
     ./dotfiles.nix
     ./agent-skills.nix
     ./vrchat.nix
+    ./services/nix-index.nix
     ./programs/ai-tools.nix
     ./programs/dev-tools.nix
     ./programs/claude-code.nix
@@ -17,10 +18,6 @@
     ./programs/obs-studio.nix
     ./programs/zsh.nix
   ];
-
-  # nix-index for command-not-found and comma
-  programs.nix-index.enable = true;
-  programs.nix-index-database.comma.enable = true;
 
   home.username = "yuta";
 

@@ -5,11 +5,11 @@
     ./../modules/linux/niri.nix
     ./../modules/linux/input.nix
     ./../modules/linux/pam.nix
-    ./../modules/linux/audio.nix
-    ./../modules/linux/bluetooth.nix
+    ./../modules/linux/services/audio.nix
+    ./../modules/linux/services/bluetooth.nix
     ./../modules/linux/android.nix
-    ./../modules/linux/networking.nix
-    ./../modules/linux/printing.nix
+    ./../modules/linux/services/networking.nix
+    ./../modules/linux/services/printing.nix
   ];
 
   home-manager.users.yuta.imports = [

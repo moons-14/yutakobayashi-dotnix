@@ -16,7 +16,8 @@ nixpkgs.lib.nixosSystem {
     home-manager.nixosModules.home-manager
     nixos-hardware.nixosModules.raspberry-pi-5
     ../../modules/linux/nix.nix
-    ../../modules/linux/ssh.nix
+    ../../modules/linux/services/ssh.nix
+    ../../modules/linux/services/sudo.nix
     ../../modules/linux/locale.nix
     ./hardware-configuration.nix
     ../../profiles/pi5.nix

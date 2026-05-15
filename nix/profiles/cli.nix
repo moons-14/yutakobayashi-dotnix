@@ -2,8 +2,8 @@
 {
   imports = [
     ./cli-minimal.nix
-    ./../modules/linux/docker.nix
-    ./../modules/linux/tailscale.nix
+    ./../modules/linux/services/docker.nix
+    ./../modules/linux/services/tailscale.nix
   ];
 
   home-manager.users.yuta.imports = [
