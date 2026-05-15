@@ -2,21 +2,10 @@
 
 {
   imports = [
-    ./dotfiles.nix
-    ./agent-skills.nix
-    ./vrchat.nix
-    ./services/nix-index.nix
-    ./programs/ai-tools.nix
-    ./programs/dev-tools.nix
-    ./programs/claude-code.nix
-    ./programs/codex.nix
-    ./programs/opencode
-    ./programs/chromium.nix
-    ./programs/firefox.nix
-    ./programs/git.nix
-    ./programs/jj.nix
-    ./programs/obs-studio.nix
-    ./programs/zsh.nix
+    ../profiles/home/base.nix
+    ../profiles/home/cli.nix
+    ../profiles/home/development.nix
+    ../profiles/home/desktop.nix
   ];
 
   home.username = "yuta";

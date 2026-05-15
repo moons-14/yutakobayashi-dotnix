@@ -245,9 +245,33 @@
       ];
 
       imports = [
+        ./flake-module.nix
         treefmt-nix.flakeModule
         inputs.git-hooks.flakeModule
       ];
+
+      _module.args = {
+        inherit mkPkgs;
+      };
+
+      hosts = {
+        UM790-Pro = {
+          system = "x86_64-linux";
+        };
+        X870-Stell-Legend-WiFi = {
+          system = "x86_64-linux";
+        };
+        pi5 = {
+          system = "aarch64-linux";
+        };
+        M2-MacBook-Air = {
+          system = "aarch64-darwin";
+        };
+        Galaxy-S23FE = {
+          system = "aarch64-linux";
+          platform = "android";
+        };
+      };
 
       perSystem =
         {
@@ -437,20 +461,5 @@
           };
         };
 
-      flake = {
-        nixosConfigurations = {
-          UM790-Pro = import ./nix/hosts/UM790-Pro { inherit inputs mkPkgs; };
-          X870-Stell-Legend-WiFi = import ./nix/hosts/X870-Stell-Legend-WiFi { inherit inputs mkPkgs; };
-          pi5 = import ./nix/hosts/pi5 { inherit inputs mkPkgs; };
-        };
-
-        darwinConfigurations = {
-          M2-MacBook-Air = import ./nix/hosts/M2-MacBook-Air { inherit inputs mkPkgs; };
-        };
-
-        nixOnDroidConfigurations = {
-          Galaxy-S23FE = import ./nix/hosts/Galaxy-S23FE { inherit inputs; };
-        };
-      };
     };
 }

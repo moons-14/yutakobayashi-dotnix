@@ -15,24 +15,29 @@
 ## Module Structure
 
 ```
-flake.nix                    # Entry point (nixos + darwin + nixOnDroid Configurations)
-├── nix/
-│   ├── hosts/
+flake.nix                    # Entry point and host table
+flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from hosts
+├── systems/
+│   ├── nixos/
 │   │   ├── UM790-Pro/           # NixOS host config (boot, network, locale)
 │   │   ├── X870-Stell-Legend-WiFi/   # NixOS-WSL host config (WSL, locale)
-│   │   ├── pi5/                 # NixOS host config (headless Pi 5)
-│   │   ├── M2-MacBook-Air/      # macOS host config
-│   │   └── Galaxy-S23FE/        # nix-on-droid host config
-│   ├── profiles/
-│   │   ├── cli-minimal.nix  # Minimal CLI environment
-│   │   ├── cli.nix          # CLI environment (docker, tailscale)
-│   │   ├── cli-server.nix   # Server CLI environment (docker, no tailscale)
-│   │   ├── pi5.nix          # Headless Pi 5 environment
-│   │   ├── gui.nix          # GUI environment (niri, audio, bluetooth)
-│   │   ├── laptop.nix       # Laptop environment (gui + extras)
-│   │   └── darwin.nix       # macOS environment
+│   │   └── pi5/                 # NixOS host config (headless Pi 5)
+│   ├── darwin/
+│   │   └── M2-MacBook-Air/      # macOS host config
+│   └── android/
+│       └── Galaxy-S23FE/        # nix-on-droid host config
+├── homes/
+│   ├── common.nix               # Shared Home Manager glue
+│   ├── nixos/                   # NixOS Home Manager host config
+│   ├── darwin/                  # macOS Home Manager host config
+│   └── android/                 # nix-on-droid home hook
+├── nix/
 │   ├── modules/
-│   │   ├── linux/           # NixOS system modules (niri, docker, audio, etc.)
+│   │   ├── profiles/
+│   │   │   ├── nixos/       # NixOS profiles (cli, cli-server, gui, laptop, pi5)
+│   │   │   ├── darwin/      # macOS profile
+│   │   │   └── home/        # Home Manager profiles (base, terminal, cli, development, desktop)
+│   │   ├── linux/           # NixOS system modules (services, programs, niri, etc.)
 │   │   ├── darwin/          # macOS nix-darwin modules (homebrew, system defaults, nix)
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules
 │   │   └── home/            # Home Manager shared modules (zsh, git, claude-code)
