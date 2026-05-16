@@ -17,6 +17,7 @@ let
     model_reasoning_effort = "medium";
     personality = "pragmatic";
     project_doc_fallback_filenames = [ "CLAUDE.md" ];
+    suppress_unstable_features_warning = true;
     web_search_request = true;
 
     features = {
