@@ -9,6 +9,7 @@
   imports = [
     ../common.nix
     ../services/nextcloud
+    ../services/immich
   ];
 
   boot.loader.systemd-boot.enable = true;
