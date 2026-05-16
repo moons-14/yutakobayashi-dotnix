@@ -2,8 +2,14 @@
 
 let
   domain = "www.mod.gov.cn";
+  errorPagePort = 5000;
 in
 {
+  virtualisation.oci-containers.containers.cloudflare-error-page = {
+    image = "ghcr.io/fa0311/cloudflare-error-page-docker:latest";
+    ports = [ "127.0.0.1:${toString errorPagePort}:5000" ];
+  };
+
   services.traefik = {
     enable = true;
 
@@ -37,6 +43,17 @@ in
               permanent = true;
             };
           };
+          error-pages = {
+            errors = {
+              status = [
+                "500-599"
+                "404"
+                "403"
+              ];
+              query = "/{status}.html";
+              service = "error-pages-service";
+            };
+          };
         };
 
         routers = {
@@ -53,6 +70,7 @@ in
             rule = "Host(`${domain}`)";
             priority = 100;
             service = "mitmproxy";
+            middlewares = [ "error-pages" ];
           };
         };
 
@@ -65,6 +83,11 @@ in
           mitmproxy = {
             loadBalancer = {
               servers = [ { url = "http://127.0.0.1:8081"; } ];
+            };
+          };
+          error-pages-service = {
+            loadBalancer = {
+              servers = [ { url = "http://127.0.0.1:${toString errorPagePort}"; } ];
             };
           };
         };
