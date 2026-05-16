@@ -3,11 +3,11 @@
 {
   imports = [
     ./terminal.nix
-    ../../home/packages.nix
-    ../../home/programs/gh.nix
-    ../../home/programs/neovim.nix
-    ../../home/programs/bat.nix
-    ../../home/programs/btop.nix
-    ../../home/programs/fastfetch
+    ../../home/cli/packages.nix
+    ../../home/development/gh.nix
+    ../../home/development/neovim.nix
+    ../../home/cli/bat.nix
+    ../../home/cli/btop.nix
+    ../../home/cli/fastfetch
   ];
 }

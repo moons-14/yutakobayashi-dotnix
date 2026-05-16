@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../home/programs/git.nix
-    ../../home/programs/tmux
+    ../../home/development/git.nix
+    ../../home/cli/tmux
   ];
 }

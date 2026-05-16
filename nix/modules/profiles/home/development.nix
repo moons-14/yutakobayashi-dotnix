@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ../../home/programs/ai-tools.nix
-    ../../home/programs/dev-tools.nix
-    ../../home/programs/claude-code.nix
-    ../../home/programs/codex.nix
-    ../../home/programs/opencode
-    ../../home/programs/jj.nix
+    ../../home/coding-agents/packages.nix
+    ../../home/development/packages.nix
+    ../../home/coding-agents/claude-code.nix
+    ../../home/coding-agents/codex.nix
+    ../../home/coding-agents/opencode
+    ../../home/development/jj.nix
   ];
 }
