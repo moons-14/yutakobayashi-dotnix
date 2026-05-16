@@ -22,6 +22,8 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   ├── nixos/
 │   │   ├── common.nix           # Shared NixOS host imports
 │   │   ├── desktop.nix          # Shared NixOS desktop system settings
+│   │   ├── fonts.nix            # Shared NixOS font settings
+│   │   ├── input-method.nix     # Shared NixOS input method settings
 │   │   ├── services/            # Host/system service bundles (microVMs, secrets, etc.)
 │   │   ├── UM790-Pro/           # NixOS host config (boot, network, locale)
 │   │   ├── X870-Stell-Legend-WiFi/   # NixOS-WSL host config (WSL, locale)
@@ -29,6 +31,7 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   ├── darwin/
 │   │   ├── common.nix           # Shared macOS host imports
 │   │   ├── desktop.nix          # Shared macOS desktop system settings
+│   │   ├── homebrew.nix         # Shared macOS Homebrew app set
 │   │   └── M2-MacBook-Air/      # macOS host config
 │   └── android/
 │       └── Galaxy-S23FE/        # nix-on-droid host config
@@ -43,8 +46,8 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   │   ├── profiles/
 │   │   │   ├── nixos/       # NixOS profiles (cli, cli-server, gui, laptop)
 │   │   │   └── home/        # Home Manager profiles (base, terminal, cli, development, desktop)
-│   │   ├── nixos/           # Reusable optioned NixOS modules (tailscale, security, kubo)
-│   │   ├── darwin/          # macOS nix-darwin modules (homebrew, launchd services)
+│   │   ├── nixos/           # Reusable optioned NixOS modules (docker, tailscale, security, kubo)
+│   │   ├── darwin/          # Reusable optioned nix-darwin modules
 │   │   ├── shared/          # Shared system modules across platforms (nix, nixpkgs)
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules
 │   │   └── home/            # Home Manager shared modules and optioned feature modules

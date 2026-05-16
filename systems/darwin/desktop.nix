@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  imports = [
+    ./homebrew.nix
+  ];
+
   system = {
     defaults = {
       controlcenter.BatteryShowPercentage = true;

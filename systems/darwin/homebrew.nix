@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   homebrew = {
     enable = true;
@@ -41,10 +39,8 @@
       "ca-certificates"
       "wget"
     ];
-    # /Applications への直接インストールやシステム統合が必要な cask
-    # brew-nix で管理可能なものは packages.nix に移動済み
     casks = [
-      # System Integration (カーネル拡張・システムサービス)
+      # System Integration
       "1password"
       "karabiner-elements"
       "bettertouchtool"
@@ -55,11 +51,12 @@
       "blackhole-2ch"
       "nani"
       "telegram"
-      # Browsers (システム統合が深い)
+
+      # Browsers
       "chromium"
       "google-chrome"
 
-      # Complex Installers (pkg/独自インストーラー)
+      # Complex installers
       "adobe-acrobat-reader"
       "adobe-creative-cloud"
       "android-studio"
@@ -73,7 +70,7 @@
       "ledger-wallet"
       "qmk-toolbox"
 
-      # Media (brew-nix のビルドが壊れているため cask で管理)
+      # Media
       "obs"
       "krita"
       "spotify"
@@ -84,7 +81,7 @@
       "codexbar"
       "windows-app"
 
-      # VR (brew-nix のハッシュが壊れているため cask で管理)
+      # VR
       "unity-hub"
       "virtual-desktop-streamer"
 

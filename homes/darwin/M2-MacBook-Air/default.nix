@@ -10,7 +10,7 @@
         ../../../nix/modules/profiles/home/cli.nix
         ../../../nix/modules/profiles/home/development.nix
         ../../../nix/modules/profiles/home/desktop.nix
-        ../../../nix/modules/darwin/packages.nix
+        ../desktop.nix
         inputs.onepassword-shell-plugins.hmModules.default
       ];
       home.homeDirectory = "/Users/${username}";

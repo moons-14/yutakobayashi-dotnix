@@ -1,6 +1,4 @@
-# macOS固有パッケージ
-# brew-nix: Homebrew cask を Nix パッケージとして管理（バージョン固定・ロールバック可能）
-# /Applications へのインストールが必須な cask は homebrew.nix で管理
+# macOS-specific Home Manager packages.
 { pkgs, ... }:
 
 {
@@ -20,7 +18,6 @@
       cocoapods
       watchman
     ]
-    # brew-nix casks
     ++ (with pkgs.brewCasks; [
       # Communication
       discord
