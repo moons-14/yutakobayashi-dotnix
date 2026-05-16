@@ -12,6 +12,9 @@
   - `~/.agents/skills`
   - `~/.config/claude/skills`
   - `~/.config/codex/skills`
+  - Hermes microVM: `/var/lib/hermes/.hermes/skills`
+
+Hermes microVM 向けのスキルは `systems/nixos/services/hermes-agent/guest.nix` で個別に bundle 化し、シンボリックリンクではなく実体コピーで配置します。
 
 ## スキルの追加
 
@@ -27,3 +30,4 @@
   - Anthropic: https://github.com/anthropics/skills
   - Vercel: https://github.com/vercel-labs/skills
   - Obsidian: https://github.com/kepano/obsidian-skills
+  - Superpowers: https://github.com/obra/superpowers

@@ -1,9 +1,32 @@
 {
   config,
+  inputs,
+  lib,
   pkgs,
   ...
 }:
 let
+  agentSkillsLib = inputs.agent-skills.lib.agent-skills;
+  hermesSkillsSources = {
+    superpowers = {
+      path = inputs.superpowers;
+      subdir = "skills";
+    };
+  };
+  hermesSkillsCatalog = agentSkillsLib.discoverCatalog hermesSkillsSources;
+  hermesSkillsSelection = agentSkillsLib.selectSkills {
+    catalog = hermesSkillsCatalog;
+    sources = hermesSkillsSources;
+    skills.brainstorming = {
+      from = "superpowers";
+      path = "brainstorming";
+    };
+  };
+  hermesSkillsBundle = agentSkillsLib.mkBundle {
+    inherit pkgs;
+    selection = hermesSkillsSelection;
+    name = "hermes-agent-skills";
+  };
   hermesConfigFile = pkgs.writeText "hermes-config.yaml" (
     builtins.toJSON config.services.hermes-agent.settings
   );
@@ -66,6 +89,7 @@ in
 
     script = ''
       install -d -o hermes -g hermes -m 2770 /var/lib/hermes/.hermes
+      install -d -o hermes -g hermes -m 2770 /var/lib/hermes/.hermes/skills
 
       install -o hermes -g hermes -m 0640 \
         ${hermesConfigFile} /var/lib/hermes/.hermes/config.yaml
@@ -77,6 +101,10 @@ in
         install -o hermes -g hermes -m 0600 \
           ${credentialsDir}/hermes-agent.auth.json /var/lib/hermes/.hermes/auth.json
       fi
+
+      ${lib.getExe pkgs.rsync} -aL --delete \
+        ${hermesSkillsBundle}/brainstorming/ /var/lib/hermes/.hermes/skills/brainstorming/
+      chown -R hermes:hermes /var/lib/hermes/.hermes/skills/brainstorming
     '';
   };
 

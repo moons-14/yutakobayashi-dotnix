@@ -24,8 +24,8 @@ nix flake update
 
 - **設定**: `nix/modules/home/coding-agents/agent-skills`
 - **ローカルスキル**: `agents/skills/`
-- **外部スキル**: `anthropics/skills`, `vercel-labs/skills`
-- **デプロイ先**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
+- **外部スキル**: `anthropics/skills`, `vercel-labs/skills`, `obra/superpowers`
+- **デプロイ先**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`, Hermes microVM `/var/lib/hermes/.hermes/skills`
 
 スキル名の固定リストは保守コストが高いので置かず、利用可能なローカルスキルは `agents/skills/`、有効化している外部スキルは `nix/modules/home/coding-agents/agent-skills` を正本とします。補足は `agents/README.md` を参照してください。
 

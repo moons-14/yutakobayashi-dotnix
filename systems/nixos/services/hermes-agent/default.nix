@@ -44,6 +44,7 @@
 
     config = {
       imports = [ ./guest.nix ];
+      _module.args.inputs = inputs;
 
       microvm.credentialFiles = {
         "hermes-agent.env" = config.sops.templates."hermes-agent.env".path;

@@ -125,12 +125,12 @@ Both use [nix-output-monitor](https://github.com/maralorn/nix-output-monitor) fo
 
 ## Agent Skills
 
-Claude Code skills are managed via [agent-skills-nix](https://github.com/Kyure-A/agent-skills-nix).
+Agent skills are managed via [agent-skills-nix](https://github.com/Kyure-A/agent-skills-nix).
 
 - **Config**: `nix/modules/home/coding-agents/agent-skills`
 - **Local skills**: `agents/skills/`
-- **External skills**: [anthropics/skills](https://github.com/anthropics/skills), [vercel-labs/skills](https://github.com/vercel-labs/skills), [ast-grep/claude-skill](https://github.com/ast-grep/claude-skill)
-- **Deploy targets**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`
+- **External skills**: [anthropics/skills](https://github.com/anthropics/skills), [vercel-labs/skills](https://github.com/vercel-labs/skills), [ast-grep/claude-skill](https://github.com/ast-grep/claude-skill), [obra/superpowers](https://github.com/obra/superpowers)
+- **Deploy targets**: `~/.agents/skills`, `~/.config/claude/skills`, `~/.config/codex/skills`, Hermes microVM `/var/lib/hermes/.hermes/skills`
 
 Avoid maintaining a fixed skill list here. Treat `agents/skills/` and `nix/modules/home/coding-agents/agent-skills` as the source of truth.
 
