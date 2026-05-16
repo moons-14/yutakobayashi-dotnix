@@ -33,7 +33,7 @@ nix flake update
 
 NixOS & macOS flake構成 with home-manager（nixos-unstable + nixpkgs-stable fallback）
 
-Host 定義は root の `flake-module.nix` が `hosts` table から生成します。Host 固有の system 設定は `systems/<platform>/<hostname>/`、platform 共通の system 設定は `systems/<platform>/common.nix` や `systems/<platform>/desktop.nix`、Home Manager 設定は `homes/<platform>/<hostname>/` に置きます。共通 module は `nix/modules/` に寄せ、NixOS profile は `nix/modules/profiles/nixos/`、Home Manager profile は `nix/modules/profiles/home/` に置きます。
+Host 定義は root の `flake-module.nix` が `hosts` table から生成します。Host 固有の system 設定は `systems/<platform>/<hostname>/`、platform 共通の system 設定は `systems/<platform>/common.nix` や `systems/<platform>/desktop.nix`、Home Manager 設定は `homes/<platform>/<hostname>/` に置きます。アプリ単位の Home Manager 設定は direct import 用の `applications/`、option 付きの再利用可能な Home Manager 機能 module は `nix/modules/home/` に置きます。共通 module は `nix/modules/` に寄せ、NixOS profile は `nix/modules/profiles/nixos/`、Home Manager profile は `nix/modules/profiles/home/` に置きます。
 
 独自パッケージの実体は `yutakobayashidev/nur-packages` で管理し、`dotnix` は GitHub flake input として取り込みます。ローカルの未 push 変更を試すときだけ `--override-input nur-packages path:../nur-packages` を使います。
 

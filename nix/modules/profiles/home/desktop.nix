@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ../../home/gaming/vrchat.nix
-    ../../home/browsers/chromium.nix
-    ../../home/browsers/firefox.nix
-    ../../home/media/obs-studio.nix
-    ../../home/desktop/ghostty
+    ../../../../applications/vrchat
+    ../../../../applications/chromium
+    ../../../../applications/firefox
+    ../../../../applications/obs-studio
+    ../../../../applications/ghostty
   ];
 
   home.packages =

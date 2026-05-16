@@ -8,6 +8,7 @@
 }:
 
 let
+  cfg = config.my.programs.claude-code;
   claudeConfigDir = "${config.xdg.configHome}/claude";
   claudeDotfilesDir = "${dotfilesDir}/claude";
   inherit (config.home) homeDirectory;
@@ -220,32 +221,36 @@ let
   claudeSettings = jsonFormat.generate "claude-settings.json" settings;
 in
 {
-  home.sessionVariables = {
-    CLAUDE_CONFIG_DIR = claudeConfigDir;
-  };
+  options.my.programs.claude-code.enable = lib.mkEnableOption "Claude Code";
 
-  home.activation.writeClaudeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "${claudeConfigDir}"
-    ${pkgs.coreutils}/bin/install -m 644 ${claudeSettings} "${claudeConfigDir}/settings.json"
-  '';
+  config = lib.mkIf cfg.enable {
+    home.sessionVariables = {
+      CLAUDE_CONFIG_DIR = claudeConfigDir;
+    };
 
-  home.activation.setupRtk = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    echo "Setting up rtk hook..."
-    ${rtk} init -g --hook-only --no-patch 2>/dev/null || true
-  '';
+    home.activation.writeClaudeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "${claudeConfigDir}"
+      ${pkgs.coreutils}/bin/install -m 644 ${claudeSettings} "${claudeConfigDir}/settings.json"
+    '';
 
-  xdg.configFile = {
-    "claude/hooks".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/hooks";
+    home.activation.setupRtk = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      echo "Setting up rtk hook..."
+      ${rtk} init -g --hook-only --no-patch 2>/dev/null || true
+    '';
 
-    "claude/CLAUDE.md".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/CLAUDE.md";
+    xdg.configFile = {
+      "claude/hooks".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/hooks";
 
-    "claude/commands".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/commands";
+      "claude/CLAUDE.md".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/CLAUDE.md";
 
-    "claude/agents".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/agents";
+      "claude/commands".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/commands";
 
-    "claude/output-styles".source =
-      config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/output-styles";
+      "claude/agents".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/agents";
 
-    "claude/rules".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/rules";
+      "claude/output-styles".source =
+        config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/output-styles";
+
+      "claude/rules".source = config.lib.file.mkOutOfStoreSymlink "${claudeDotfilesDir}/rules";
+    };
   };
 }

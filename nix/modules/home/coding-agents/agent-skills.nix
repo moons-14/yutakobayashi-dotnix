@@ -1,173 +1,181 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
   local-skills,
   ...
 }:
+let
+  cfg = config.my.programs.agent-skills;
+in
 {
-  programs.agent-skills = {
-    enable = true;
+  options.my.programs.agent-skills.enable = lib.mkEnableOption "agent skills";
 
-    sources = {
-      local = {
-        path = local-skills;
-        subdir = "agents/skills";
-      };
-      anthropic = {
-        path = inputs.anthropic-skills;
-        subdir = "skills";
-      };
-      vercel = {
-        path = inputs.vercel-skills;
-        subdir = "skills";
-      };
-      nextlevelbuilder = {
-        path = inputs.ui-ux-pro-max-skill;
-        subdir = ".claude/skills";
-      };
-      ast-grep = {
-        path = inputs.ast-grep-skill;
-        subdir = "ast-grep/skills";
-      };
-      deno = {
-        path = inputs.deno-skills;
-        subdir = "skills";
-      };
-      obsidian = {
-        path = inputs.obsidian-skills;
-        subdir = "skills";
-      };
-      repiq = {
-        path = inputs.repiq;
-        subdir = "skills";
-      };
-      prompt-review = {
-        path = inputs.prompt-review-skill;
-        subdir = ".claude/skills";
-      };
-      difit = {
-        path = inputs.difit-skills;
-        subdir = "skills";
-      };
-      agent-browser = {
-        path = inputs.agent-browser-skill;
-        subdir = "skills";
-      };
-    };
+  config = lib.mkIf cfg.enable {
+    programs.agent-skills = {
+      enable = true;
 
-    skills.enableAll = [
-      "local"
-      "cloudflare"
-      "hashicorp"
-      "deno"
-      "aws"
-      "obsidian"
-      "repiq"
-      "difit"
-    ];
-
-    skills.explicit = {
-      docx = {
-        from = "anthropic";
-        path = "docx";
-      };
-      pdf = {
-        from = "anthropic";
-        path = "pdf";
-      };
-      pptx = {
-        from = "anthropic";
-        path = "pptx";
-      };
-      xlsx = {
-        from = "anthropic";
-        path = "xlsx";
+      sources = {
+        local = {
+          path = local-skills;
+          subdir = "agents/skills";
+        };
+        anthropic = {
+          path = inputs.anthropic-skills;
+          subdir = "skills";
+        };
+        vercel = {
+          path = inputs.vercel-skills;
+          subdir = "skills";
+        };
+        nextlevelbuilder = {
+          path = inputs.ui-ux-pro-max-skill;
+          subdir = ".claude/skills";
+        };
+        ast-grep = {
+          path = inputs.ast-grep-skill;
+          subdir = "ast-grep/skills";
+        };
+        deno = {
+          path = inputs.deno-skills;
+          subdir = "skills";
+        };
+        obsidian = {
+          path = inputs.obsidian-skills;
+          subdir = "skills";
+        };
+        repiq = {
+          path = inputs.repiq;
+          subdir = "skills";
+        };
+        prompt-review = {
+          path = inputs.prompt-review-skill;
+          subdir = ".claude/skills";
+        };
+        difit = {
+          path = inputs.difit-skills;
+          subdir = "skills";
+        };
+        agent-browser = {
+          path = inputs.agent-browser-skill;
+          subdir = "skills";
+        };
       };
 
-      frontend-design = {
-        from = "anthropic";
-        path = "frontend-design";
-      };
-      skill-creator = {
-        from = "anthropic";
-        path = "skill-creator";
-      };
-      webapp-testing = {
-        from = "anthropic";
-        path = "webapp-testing";
-      };
+      skills.enableAll = [
+        "local"
+        "cloudflare"
+        "hashicorp"
+        "deno"
+        "aws"
+        "obsidian"
+        "repiq"
+        "difit"
+      ];
 
-      find-skills = {
-        from = "vercel";
-        path = "find-skills";
-      };
-
-      ui-ux-pro-max = {
-        from = "nextlevelbuilder";
-        path = "ui-ux-pro-max";
-      };
-
-      agent-browser =
-        let
-          agentBrowserBin = lib.getExe pkgs.llm-agents.agent-browser;
-        in
-        {
-          from = "agent-browser";
-          path = "agent-browser";
-          packages = [ pkgs.llm-agents.agent-browser ];
-          transform =
-            { original, ... }:
-            builtins.replaceStrings
-              [
-                "Bash(agent-browser:*), Bash(npx agent-browser:*)"
-                "Install: `npm i -g agent-browser && agent-browser install`\n\n"
-                "agent-browser skills "
-                "`agent-browser`"
-              ]
-              [
-                "Bash(${agentBrowserBin}:*)"
-                ""
-                "${agentBrowserBin} skills "
-                "`${agentBrowserBin}`"
-              ]
-              original;
+      skills.explicit = {
+        docx = {
+          from = "anthropic";
+          path = "docx";
+        };
+        pdf = {
+          from = "anthropic";
+          path = "pdf";
+        };
+        pptx = {
+          from = "anthropic";
+          path = "pptx";
+        };
+        xlsx = {
+          from = "anthropic";
+          path = "xlsx";
         };
 
-      ast-grep =
-        let
-          astGrepBin = lib.getExe pkgs.ast-grep;
-        in
-        {
-          from = "ast-grep";
-          path = "ast-grep";
-          packages = [ pkgs.ast-grep ];
-          transform =
-            { original, dependencies }:
-            let
-              patched =
-                builtins.replaceStrings
-                  [ "| ast-grep " "ast-grep scan " "ast-grep run " ]
-                  [ "| ${astGrepBin} " "${astGrepBin} scan " "${astGrepBin} run " ]
-                  original;
-            in
-            ''
-              ${patched}
-
-              ${dependencies}
-            '';
+        frontend-design = {
+          from = "anthropic";
+          path = "frontend-design";
+        };
+        skill-creator = {
+          from = "anthropic";
+          path = "skill-creator";
+        };
+        webapp-testing = {
+          from = "anthropic";
+          path = "webapp-testing";
         };
 
-      prompt-review = {
-        from = "prompt-review";
-        path = "prompt-review";
-      };
-    };
+        find-skills = {
+          from = "vercel";
+          path = "find-skills";
+        };
 
-    targets = {
-      agents.enable = true;
-      claude.enable = true;
-      codex.enable = true;
+        ui-ux-pro-max = {
+          from = "nextlevelbuilder";
+          path = "ui-ux-pro-max";
+        };
+
+        agent-browser =
+          let
+            agentBrowserBin = lib.getExe pkgs.llm-agents.agent-browser;
+          in
+          {
+            from = "agent-browser";
+            path = "agent-browser";
+            packages = [ pkgs.llm-agents.agent-browser ];
+            transform =
+              { original, ... }:
+              builtins.replaceStrings
+                [
+                  "Bash(agent-browser:*), Bash(npx agent-browser:*)"
+                  "Install: `npm i -g agent-browser && agent-browser install`\n\n"
+                  "agent-browser skills "
+                  "`agent-browser`"
+                ]
+                [
+                  "Bash(${agentBrowserBin}:*)"
+                  ""
+                  "${agentBrowserBin} skills "
+                  "`${agentBrowserBin}`"
+                ]
+                original;
+          };
+
+        ast-grep =
+          let
+            astGrepBin = lib.getExe pkgs.ast-grep;
+          in
+          {
+            from = "ast-grep";
+            path = "ast-grep";
+            packages = [ pkgs.ast-grep ];
+            transform =
+              { original, dependencies }:
+              let
+                patched =
+                  builtins.replaceStrings
+                    [ "| ast-grep " "ast-grep scan " "ast-grep run " ]
+                    [ "| ${astGrepBin} " "${astGrepBin} scan " "${astGrepBin} run " ]
+                    original;
+              in
+              ''
+                ${patched}
+
+                ${dependencies}
+              '';
+          };
+
+        prompt-review = {
+          from = "prompt-review";
+          path = "prompt-review";
+        };
+      };
+
+      targets = {
+        agents.enable = true;
+        claude.enable = true;
+        codex.enable = true;
+      };
     };
   };
 }

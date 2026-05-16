@@ -7,6 +7,7 @@
 }:
 
 let
+  cfg = config.my.programs.codex;
   codexConfigDir = "${config.xdg.configHome}/codex";
   codexDotfilesDir = "${dotfilesDir}/codex";
   tomlFormat = pkgs.formats.toml { };
@@ -33,17 +34,21 @@ let
   codexConfig = tomlFormat.generate "codex-config" settings;
 in
 {
-  home.packages = [ pkgs.llm-agents.codex ];
+  options.my.programs.codex.enable = lib.mkEnableOption "Codex";
 
-  home.sessionVariables = {
-    CODEX_HOME = codexConfigDir;
+  config = lib.mkIf cfg.enable {
+    home.packages = [ pkgs.llm-agents.codex ];
+
+    home.sessionVariables = {
+      CODEX_HOME = codexConfigDir;
+    };
+
+    home.activation.writeCodexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "${codexConfigDir}"
+      ${pkgs.coreutils}/bin/install -m 644 ${codexConfig} "${codexConfigDir}/config.toml"
+    '';
+
+    xdg.configFile."codex/AGENTS.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${codexDotfilesDir}/AGENTS.md";
   };
-
-  home.activation.writeCodexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "${codexConfigDir}"
-    ${pkgs.coreutils}/bin/install -m 644 ${codexConfig} "${codexConfigDir}/config.toml"
-  '';
-
-  xdg.configFile."codex/AGENTS.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${codexDotfilesDir}/AGENTS.md";
 }

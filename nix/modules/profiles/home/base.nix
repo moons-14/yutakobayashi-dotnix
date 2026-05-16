@@ -7,4 +7,6 @@
     ../../home/services/nix-index.nix
     ../../home/shell/zsh.nix
   ];
+
+  my.programs.agent-skills.enable = true;
 }

@@ -36,6 +36,7 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   ├── nixos/                   # NixOS Home Manager host config
 │   ├── darwin/                  # macOS Home Manager host config
 │   └── android/                 # nix-on-droid home hook
+├── applications/                # Directly imported Home Manager app configs (git, tmux, browsers, misc)
 ├── nix/
 │   ├── modules/
 │   │   ├── profiles/
@@ -45,7 +46,7 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   │   ├── darwin/          # macOS nix-darwin modules (homebrew, launchd services)
 │   │   ├── shared/          # Shared system modules across platforms (nix, nixpkgs)
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules
-│   │   └── home/            # Home Manager shared modules (zsh, git, claude-code)
+│   │   └── home/            # Home Manager shared modules and optioned feature modules
 │   └── overlays/            # Custom packages (overlay)
 ├── agents/skills/           # Claude Code agent skills
 ├── nvim/                    # Neovim config (Lua)
