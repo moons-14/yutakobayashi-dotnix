@@ -10,6 +10,7 @@
     ../common.nix
     ../services/nextcloud
     ../services/immich
+    ../services/gitea
   ];
 
   boot.loader.systemd-boot.enable = true;
