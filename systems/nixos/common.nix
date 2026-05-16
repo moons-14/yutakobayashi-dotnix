@@ -14,6 +14,8 @@
     ../../nix/modules/nixos
   ];
 
+  sops.age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
+
   nix.gc.dates = "weekly";
 
   nix.settings = {
