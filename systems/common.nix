@@ -3,11 +3,9 @@
 {
   imports = [
     ../nix/modules/shared/nix
-    ../nix/modules/shared/nixpkgs
   ];
 
   my.nix.enable = true;
-  my.nixpkgs.enable = true;
 
   system.activationScripts.extraActivation.text = ''
     profiles=$(find /nix/var/nix/profiles/system-*-link 2>/dev/null | tail -2)
