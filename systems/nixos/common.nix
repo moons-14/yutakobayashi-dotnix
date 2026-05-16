@@ -4,9 +4,9 @@
   # Base modules shared by regular NixOS hosts. Host-specific profiles still
   # decide whether the machine is desktop, server, or WSL.
   imports = [
+    ../common.nix
     inputs.sops-nix.nixosModules.sops
     ../../nix/modules/linux
-    ../../nix/modules/shared/nix
   ];
 
   nix.gc.dates = "weekly";

@@ -18,6 +18,7 @@
 flake.nix                    # Entry point and host table
 flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from hosts
 ├── systems/
+│   ├── common.nix               # Shared system imports and activation hooks
 │   ├── nixos/
 │   │   ├── common.nix           # Shared NixOS host imports
 │   │   ├── desktop.nix          # Shared NixOS desktop system settings
@@ -41,8 +42,8 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   │   │   ├── nixos/       # NixOS profiles (cli, cli-server, gui, laptop)
 │   │   │   └── home/        # Home Manager profiles (base, terminal, cli, development, desktop)
 │   │   ├── linux/           # NixOS system modules (services, programs, etc.)
-│   │   ├── darwin/          # macOS nix-darwin modules (homebrew, nix)
-│   │   ├── shared/          # Shared system modules across platforms
+│   │   ├── darwin/          # macOS nix-darwin modules (homebrew, launchd services)
+│   │   ├── shared/          # Shared system modules across platforms (nix, nixpkgs)
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules
 │   │   └── home/            # Home Manager shared modules (zsh, git, claude-code)
 │   └── overlays/            # Custom packages (overlay)

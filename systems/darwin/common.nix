@@ -2,8 +2,8 @@
 
 {
   imports = [
+    ../common.nix
     ../../nix/modules/darwin
-    ../../nix/modules/shared/nix
   ];
 
   users.users.${username}.home = "/Users/${username}";
@@ -16,6 +16,13 @@
   system.primaryUser = username;
   system.stateVersion = 6;
   system.startup.chime = false;
+
+  my.services.caffeinate = {
+    enable = true;
+    preventSleepOnCharge = true;
+  };
+
+  my.services.newsyslog.enable = true;
 
   nix.gc.interval = {
     Weekday = 0;
