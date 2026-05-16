@@ -8,7 +8,6 @@
   imports = [
     ../common.nix
     inputs.nixos-hardware.nixosModules.raspberry-pi-5
-    ../../../nix/modules/profiles/nixos/cli-server.nix
   ];
 
   boot.loader.generic-extlinux-compatible.enable = true;

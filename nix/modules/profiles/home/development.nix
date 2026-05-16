@@ -3,6 +3,7 @@
 {
   imports = [
     ../../home/coding-agents/agent-browser
+    ../../home/coding-agents/agent-skills
     ../../home/coding-agents/claude-code
     ../../home/coding-agents/codex
     ../../home/coding-agents/continues
@@ -17,6 +18,7 @@
   ];
 
   my.programs.agent-browser.enable = true;
+  my.programs.agent-skills.enable = true;
   my.programs.claude-code.enable = true;
   my.programs.codex.enable = true;
   my.programs.continues.enable = true;
