@@ -1490,6 +1490,22 @@
         "type": "github"
       }
     },
+    "px4_drv": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777695451,
+        "narHash": "sha256-ED35tbk/OX4NcQTNH13k/TuRaQE3YpsMAb3FREEUYIk=",
+        "owner": "tsukumijima",
+        "repo": "px4_drv",
+        "rev": "44134090a7bd4c8b53581aff37902cfa7c91a48c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tsukumijima",
+        "repo": "px4_drv",
+        "type": "github"
+      }
+    },
     "pyproject-build-systems": {
       "inputs": {
         "nixpkgs": [
@@ -1638,6 +1654,7 @@
         "obsidian-skills": "obsidian-skills",
         "onepassword-shell-plugins": "onepassword-shell-plugins",
         "prompt-review-skill": "prompt-review-skill",
+        "px4_drv": "px4_drv",
         "repiq": "repiq",
         "rustowl-flake": "rustowl-flake",
         "sops-nix": "sops-nix",

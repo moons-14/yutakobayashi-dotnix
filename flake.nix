@@ -133,6 +133,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-filter.url = "github:numtide/nix-filter";
+    px4_drv = {
+      url = "github:tsukumijima/px4_drv";
+      flake = false;
+    };
     # TODO: Pinned to specific nixpkgs commit as workaround for nix-community/nix-on-droid#495
     # Issue: "getting pseudoterminal attributes: Permission denied" with nixpkgs after 2026-01-24
     nix-on-droid = {
