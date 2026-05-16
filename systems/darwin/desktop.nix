@@ -1,10 +1,7 @@
-{ username, ... }:
+{ pkgs, ... }:
 
 {
   system = {
-    primaryUser = username;
-    stateVersion = 6;
-
     defaults = {
       controlcenter.BatteryShowPercentage = true;
 
@@ -67,10 +64,7 @@
         };
       };
     };
-
   };
-
-  system.startup.chime = false;
 
   system.keyboard = {
     enableKeyMapping = true;
@@ -80,6 +74,21 @@
   power = {
     restartAfterFreeze = true;
     sleep.allowSleepByPowerButton = true;
+  };
+
+  fonts = {
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
+      inter
+      stable.jetbrains-mono
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
+      nerd-fonts.hack
+      hackgen-nf-font
+      mplus-outline-fonts.githubRelease
+    ];
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;

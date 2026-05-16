@@ -3,8 +3,7 @@
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
-    ../../../nix/modules/linux
-    ./hardware-configuration.nix
+    ../common.nix
     ../../../nix/modules/profiles/nixos/cli.nix
     (
       { pkgs, ... }:
@@ -13,4 +12,16 @@
       }
     )
   ];
+
+  wsl.enable = true;
+  wsl.defaultUser = "yuta";
+  wsl.wslConf = {
+    automount.options = "metadata";
+    boot.systemd = true;
+  };
+  wsl.useWindowsDriver = true;
+
+  networking.hostName = "X870-Stell-Legend-WiFi";
+
+  system.stateVersion = "25.11";
 }

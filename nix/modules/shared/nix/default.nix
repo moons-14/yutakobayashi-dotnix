@@ -1,17 +1,12 @@
 { ... }:
 
 {
+  nix.optimise.automatic = true;
+
   nix.gc = {
     automatic = true;
-    interval = {
-      Weekday = 0;
-      Hour = 2;
-      Minute = 0;
-    };
-    options = "--delete-older-than 4d";
+    options = "--delete-older-than 7d";
   };
-
-  nix.optimise.automatic = true;
 
   nix.settings = {
     experimental-features = [
@@ -19,7 +14,6 @@
       "flakes"
     ];
     accept-flake-config = true;
-    always-allow-substitutes = true;
     substituters = [
       "https://cache.nixos.org"
       "https://cache.numtide.com"

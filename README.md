@@ -19,10 +19,14 @@ flake.nix                    # Entry point and host table
 flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from hosts
 ├── systems/
 │   ├── nixos/
+│   │   ├── common.nix           # Shared NixOS host imports
+│   │   ├── desktop.nix          # Shared NixOS desktop system settings
 │   │   ├── UM790-Pro/           # NixOS host config (boot, network, locale)
 │   │   ├── X870-Stell-Legend-WiFi/   # NixOS-WSL host config (WSL, locale)
 │   │   └── pi5/                 # NixOS host config (headless Pi 5)
 │   ├── darwin/
+│   │   ├── common.nix           # Shared macOS host imports
+│   │   ├── desktop.nix          # Shared macOS desktop system settings
 │   │   └── M2-MacBook-Air/      # macOS host config
 │   └── android/
 │       └── Galaxy-S23FE/        # nix-on-droid host config
@@ -35,10 +39,10 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   ├── modules/
 │   │   ├── profiles/
 │   │   │   ├── nixos/       # NixOS profiles (cli, cli-server, gui, laptop)
-│   │   │   ├── darwin/      # macOS profile
 │   │   │   └── home/        # Home Manager profiles (base, terminal, cli, development, desktop)
-│   │   ├── linux/           # NixOS system modules (services, programs, niri, etc.)
-│   │   ├── darwin/          # macOS nix-darwin modules (homebrew, system defaults, nix)
+│   │   ├── linux/           # NixOS system modules (services, programs, etc.)
+│   │   ├── darwin/          # macOS nix-darwin modules (homebrew, nix)
+│   │   ├── shared/          # Shared system modules across platforms
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules
 │   │   └── home/            # Home Manager shared modules (zsh, git, claude-code)
 │   └── overlays/            # Custom packages (overlay)
