@@ -259,6 +259,9 @@
       };
 
       hosts = {
+        B450M-Pro4 = {
+          system = "x86_64-linux";
+        };
         UM790-Pro = {
           system = "x86_64-linux";
         };
