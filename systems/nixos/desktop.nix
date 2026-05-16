@@ -1,7 +1,11 @@
 # NixOS desktop settings shared by graphical hosts.
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
+  imports = [
+    inputs.nix-hazkey.nixosModules.hazkey
+  ];
+
   programs.niri = {
     enable = true;
   };

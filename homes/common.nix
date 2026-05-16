@@ -31,13 +31,17 @@ in
     sharedModules = [
       inputs.agent-skills.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
+      inputs.sops-nix.homeManagerModules.sops
     ];
-    users.${username} = {
-      imports = [ ../nix/modules/profiles/home/base.nix ];
-      home = {
-        inherit username;
-        stateVersion = "25.11";
+    users.${username} =
+      { config, ... }:
+      {
+        imports = [ ../nix/modules/profiles/home/base.nix ];
+        sops.age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+        home = {
+          inherit username;
+          stateVersion = "25.11";
+        };
       };
-    };
   };
 }
