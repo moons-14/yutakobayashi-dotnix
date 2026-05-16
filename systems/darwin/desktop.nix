@@ -75,6 +75,8 @@
     remapCapsLockToControl = true;
   };
 
+  my.services.azookey.enable = true;
+
   power = {
     restartAfterFreeze = true;
     sleep.allowSleepByPowerButton = true;

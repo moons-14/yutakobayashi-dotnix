@@ -51,6 +51,7 @@
       "blackhole-2ch"
       "nani"
       "telegram"
+      "azookey"
 
       # Browsers
       "chromium"
