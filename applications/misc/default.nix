@@ -28,9 +28,11 @@ in
 
       # Development Tools
       actrun
+      gogcli
       nil
       nix-init
       ni
+      repiq
       ruff
       taplo
       wabt
@@ -86,4 +88,7 @@ in
       python313Packages.markitdown
       proton-vpn-cli
     ];
+
+  programs.nix-index.enable = true;
+  programs.nix-index-database.comma.enable = true;
 }

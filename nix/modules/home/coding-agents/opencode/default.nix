@@ -6,7 +6,6 @@
 }:
 let
   cfg = config.my.programs.opencode;
-  opencodeConfigDir = "${config.xdg.configHome}/opencode";
 
   # Read settings from external JSON file
   settingsJsonText = builtins.readFile ./settings.json;

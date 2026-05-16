@@ -2,17 +2,29 @@
 
 {
   imports = [
-    ../../home/coding-agents/packages.nix
-    ../../home/development/packages.nix
-    ../../home/coding-agents/claude-code.nix
-    ../../home/coding-agents/codex.nix
+    ../../home/coding-agents/agent-browser
+    ../../home/coding-agents/claude-code
+    ../../home/coding-agents/codex
+    ../../home/coding-agents/continues
+    ../../home/coding-agents/copilot-cli
+    ../../home/coding-agents/cursor-agent
+    ../../home/coding-agents/entire
     ../../home/coding-agents/opencode
+    ../../home/coding-agents/spec-kit
+    ../../home/coding-agents/vibe-kanban
+    ../../home/coding-agents/waza
     ../../../../applications/jj
   ];
 
-  my.programs.coding-agents.enable = true;
-  my.programs.development-tools.enable = true;
+  my.programs.agent-browser.enable = true;
   my.programs.claude-code.enable = true;
   my.programs.codex.enable = true;
+  my.programs.continues.enable = true;
+  my.programs.copilot-cli.enable = true;
+  my.programs.cursor-agent.enable = true;
+  my.programs.entire.enable = true;
   my.programs.opencode.enable = true;
+  my.programs.spec-kit.enable = true;
+  my.programs.vibe-kanban.enable = true;
+  my.programs.waza.enable = true;
 }

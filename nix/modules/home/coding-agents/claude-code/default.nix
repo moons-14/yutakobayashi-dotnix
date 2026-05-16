@@ -14,7 +14,8 @@ let
   inherit (config.home) homeDirectory;
 
   jq = lib.getExe pkgs.jq;
-  rtk = lib.getExe pkgs.llm-agents.rtk;
+  rtkPackage = pkgs.llm-agents.rtk;
+  rtk = lib.getExe rtkPackage;
   rtkHookPath = "${homeDirectory}/.claude/hooks/rtk-rewrite.sh";
   jsonFormat = pkgs.formats.json { };
 
@@ -224,6 +225,13 @@ in
   options.my.programs.claude-code.enable = lib.mkEnableOption "Claude Code";
 
   config = lib.mkIf cfg.enable {
+    home.packages = with pkgs.llm-agents; [
+      claude-code
+      apm
+      ccusage
+      rtkPackage
+    ];
+
     home.sessionVariables = {
       CLAUDE_CONFIG_DIR = claudeConfigDir;
     };

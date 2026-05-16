@@ -6,7 +6,7 @@
 
 スキルは`agent-skills-nix`フレームワークで管理されています。
 
-- **設定**: `nix/modules/home/coding-agents/agent-skills.nix`
+- **設定**: `nix/modules/home/coding-agents/agent-skills`
 - **ローカルスキル**: `agents/skills/`
 - **デプロイ先**:
   - `~/.agents/skills`
@@ -22,7 +22,7 @@
 ## スキル一覧の見方
 
 - ローカルスキルは `agents/skills/` 配下を見ればよい
-- 有効化している外部スキルソースと明示スキルは `nix/modules/home/coding-agents/agent-skills.nix` が正本
+- 有効化している外部スキルソースと明示スキルは `nix/modules/home/coding-agents/agent-skills` が正本
 - 外部カタログ:
   - Anthropic: https://github.com/anthropics/skills
   - Vercel: https://github.com/vercel-labs/skills
