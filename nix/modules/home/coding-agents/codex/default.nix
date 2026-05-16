@@ -19,6 +19,12 @@ let
     project_doc_fallback_filenames = [ "CLAUDE.md" ];
     web_search_request = true;
 
+    features = {
+      remote_connections = true;
+      remote_control = true;
+      workspace_dependencies = false;
+    };
+
     mcp_servers.deepwiki = {
       url = "https://mcp.deepwiki.com/mcp";
     };
