@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -20,7 +21,20 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  hardware.graphics.enable = true;
+  hardware.nvidia = {
+    open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      config.boot.kernelPackages.nvidiaPackages.stable
+    ];
+  };
+
+  boot.kernelModules = [ "nvidia-uvm" ];
+
   hardware.nvidia-container-toolkit.enable = true;
 
   virtualisation.docker.enable = true;
