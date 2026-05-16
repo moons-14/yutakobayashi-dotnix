@@ -20,5 +20,11 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
+  hardware.graphics.enable = true;
+  hardware.nvidia-container-toolkit.enable = true;
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.daemon.settings.features.cdi = true;
+
   system.stateVersion = "25.11";
 }
