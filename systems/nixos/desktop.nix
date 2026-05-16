@@ -1,5 +1,9 @@
 # NixOS desktop settings shared by graphical hosts.
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -10,7 +14,17 @@
     enable = true;
   };
 
+  programs.obs-studio.enableVirtualCamera = true;
   programs.xwayland.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    wofi
+  ];
+
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+
+  services.printing.enable = true;
 
   services.greetd.enable = true;
   programs.regreet.enable = true;
@@ -42,6 +56,8 @@
   };
 
   services.hazkey.enable = true;
+
+  my.security.yubikey.enable = true;
 
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;

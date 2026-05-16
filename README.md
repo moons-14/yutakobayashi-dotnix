@@ -43,7 +43,7 @@ flake-module.nix             # Generates nixos/darwin/nix-on-droid outputs from 
 │   │   ├── profiles/
 │   │   │   ├── nixos/       # NixOS profiles (cli, cli-server, gui, laptop)
 │   │   │   └── home/        # Home Manager profiles (base, terminal, cli, development, desktop)
-│   │   ├── nixos/           # Reusable NixOS modules (services, programs, etc.)
+│   │   ├── nixos/           # Reusable optioned NixOS modules (tailscale, security, kubo)
 │   │   ├── darwin/          # macOS nix-darwin modules (homebrew, launchd services)
 │   │   ├── shared/          # Shared system modules across platforms (nix, nixpkgs)
 │   │   ├── nix-on-droid/    # nix-on-droid shared modules

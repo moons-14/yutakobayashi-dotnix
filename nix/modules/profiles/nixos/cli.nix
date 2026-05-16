@@ -1,7 +1,6 @@
 { ... }:
 {
-  imports = [
-    ../../nixos/services/docker.nix
-    ../../nixos/services/tailscale.nix
-  ];
+  virtualisation.docker.enable = true;
+
+  my.services.tailscale.enable = true;
 }

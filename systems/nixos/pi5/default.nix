@@ -1,33 +1,14 @@
 {
   inputs,
   lib,
-  username,
   ...
 }:
 
 {
   imports = [
+    ../common.nix
     inputs.nixos-hardware.nixosModules.raspberry-pi-5
     ../../../nix/modules/profiles/nixos/cli-server.nix
-    (
-      { pkgs, ... }:
-      {
-        programs.zsh.enable = true;
-
-        users.users.${username} = {
-          isNormalUser = true;
-          description = username;
-          shell = pkgs.zsh;
-          extraGroups = [ "wheel" ];
-        };
-
-        nix.settings.allowed-users = [ username ];
-        nix.settings.trusted-users = [
-          "root"
-          username
-        ];
-      }
-    )
   ];
 
   boot.loader.generic-extlinux-compatible.enable = true;
