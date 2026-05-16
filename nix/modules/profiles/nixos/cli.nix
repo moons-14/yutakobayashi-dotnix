@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ../../linux/services/docker.nix
-    ../../linux/services/tailscale.nix
+    ../../nixos/services/docker.nix
+    ../../nixos/services/tailscale.nix
   ];
 }

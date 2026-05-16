@@ -1,5 +1,5 @@
 # YubiKey設定
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   # YubiKey基本サポート
@@ -11,8 +11,8 @@
     enable = true;
     control = "sufficient";
     settings = {
-      origin = "pam://UM790-Pro";
-      appid = "pam://UM790-Pro";
+      origin = "pam://${config.networking.hostName}";
+      appid = "pam://${config.networking.hostName}";
     };
   };
 

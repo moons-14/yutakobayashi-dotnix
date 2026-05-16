@@ -10,7 +10,7 @@
 {
   imports = [
     ../common.nix
-    ../../../nix/modules/linux/hermes-agent
+    ../services/hermes-agent
     (modulesPath + "/installer/scan/not-detected.nix")
     ./virtualbox.nix
     ../desktop.nix

@@ -2,8 +2,8 @@
 {
   imports = [
     ../../shared/nix
-    ../../linux/services/ssh.nix
-    ../../linux/services/sudo.nix
-    ../../linux/locale.nix
+    ../../nixos/services/ssh.nix
+    ../../nixos/services/sudo.nix
+    ../../nixos/locale.nix
   ];
 }

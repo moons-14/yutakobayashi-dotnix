@@ -6,7 +6,7 @@
   imports = [
     ../common.nix
     inputs.sops-nix.nixosModules.sops
-    ../../nix/modules/linux
+    ../../nix/modules/nixos
   ];
 
   nix.gc.dates = "weekly";

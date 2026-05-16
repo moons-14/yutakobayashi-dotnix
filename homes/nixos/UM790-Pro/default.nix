@@ -8,10 +8,10 @@
       ../../../nix/modules/profiles/home/cli.nix
       ../../../nix/modules/profiles/home/development.nix
       ../../../nix/modules/profiles/home/desktop.nix
-      ../../../nix/modules/linux/programs/niri.nix
-      ../../../nix/modules/linux/programs/waybar.nix
-      ../../../nix/modules/linux/services/swayidle.nix
-      ../../../nix/modules/linux/programs/swaylock.nix
+      ../../../applications/niri
+      ../../../applications/waybar
+      ../../../applications/swayidle
+      ../../../applications/swaylock
     ];
     home.homeDirectory = "/home/${username}";
   };
