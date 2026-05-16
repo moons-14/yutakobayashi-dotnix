@@ -11,6 +11,7 @@
     ../services/nextcloud
     ../services/immich
     ../services/gitea
+    ../services/cloudflare-error-page
   ];
 
   boot.loader.systemd-boot.enable = true;
