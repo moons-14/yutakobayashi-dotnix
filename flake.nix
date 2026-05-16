@@ -422,6 +422,7 @@
               global.excludes = [
                 ".git/**"
                 "*.lock"
+                "systems/nixos/services/*/secrets/*"
               ];
 
               formatter.gitleaks = {
