@@ -1577,11 +1577,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778397733,
-        "narHash": "sha256-mfDbaKvXodJ3I/468+uTlQDJ1b6T0VpUSSB5CICNeMI=",
+        "lastModified": 1779002200,
+        "narHash": "sha256-J43zBtTy2ufRGjlmfpytm/QADGa53yRbBLffy8csnLQ=",
         "owner": "yutakobayashidev",
         "repo": "nur-packages",
-        "rev": "ac500b47a0dc9521ae60bea82998ed3e44fdd5e4",
+        "rev": "e7f32b73f449368e6da3b34211e756d7bb6a0a1c",
         "type": "github"
       },
       "original": {
@@ -1638,22 +1638,6 @@
       "original": {
         "owner": "tokoroten",
         "repo": "prompt-review",
-        "type": "github"
-      }
-    },
-    "px4_drv": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777695451,
-        "narHash": "sha256-ED35tbk/OX4NcQTNH13k/TuRaQE3YpsMAb3FREEUYIk=",
-        "owner": "tsukumijima",
-        "repo": "px4_drv",
-        "rev": "44134090a7bd4c8b53581aff37902cfa7c91a48c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tsukumijima",
-        "repo": "px4_drv",
         "type": "github"
       }
     },
@@ -1833,7 +1817,6 @@
         "obsidian-skills": "obsidian-skills",
         "onepassword-shell-plugins": "onepassword-shell-plugins",
         "prompt-review-skill": "prompt-review-skill",
-        "px4_drv": "px4_drv",
         "repiq": "repiq",
         "rustowl-flake": "rustowl-flake",
         "sops-nix": "sops-nix",
