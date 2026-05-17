@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -22,6 +23,8 @@
     ../services/traefik
     ../services/atuin
     ../services/coredns
+    inputs.nur-packages.nixosModules.px4_drv
+    inputs.nur-packages.nixosModules.rtl8812au
   ];
 
   boot.loader.systemd-boot.enable = true;
