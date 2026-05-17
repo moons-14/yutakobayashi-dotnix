@@ -49,6 +49,9 @@ typeset -gA ZSH_HIGHLIGHT_REGEXP
   ZSH_HIGHLIGHT_REGEXP+=('^[[:blank:][:space:]]*('${(j:|:)keys}')$' 'fg=blue')
 }
 
+# atuin (must be before zoxide to override Ctrl+R)
+eval "$(atuin init zsh --disable-up-arrow)"
+
 # zoxide (must be after oh-my-zsh to avoid cd being overwritten)
 eval "$(zoxide init zsh --cmd cd)"
 

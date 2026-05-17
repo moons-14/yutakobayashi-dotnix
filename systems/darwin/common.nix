@@ -1,10 +1,30 @@
-{ username, ... }:
+{
+  inputs,
+  lib,
+  username,
+  ...
+}:
 
 {
   imports = [
     ../common.nix
     ../../nix/modules/darwin
+    inputs.comin.darwinModules.comin
+    inputs.sops-nix.darwinModules.sops
   ];
+
+  services.comin = {
+    enable = true;
+    remotes = [
+      {
+        name = "origin";
+        url = "https://github.com/yutakobayashidev/dotnix";
+      }
+    ];
+  };
+
+  services.prometheus.exporters.node.enable = true;
+  users.users._prometheus-node-exporter.home = lib.mkForce "/private/var/lib/prometheus-node-exporter";
 
   users.users.${username}.home = "/Users/${username}";
 

@@ -19,6 +19,7 @@
     ../services/comin/prometheus.nix
     ../services/cloudflare-error-page
     ../services/openclaw
+    ../services/atuin
   ];
 
   boot.loader.systemd-boot.enable = true;

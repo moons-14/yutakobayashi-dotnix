@@ -9,5 +9,6 @@
     ../../../../applications/bat
     ../../../../applications/btop
     ../../../../applications/fastfetch
+    ../../../../applications/atuin
   ];
 }

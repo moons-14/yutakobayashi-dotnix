@@ -11,8 +11,10 @@ let
     "UM790-Pro"
     "B450M-Pro4"
     "pi5"
+    "M2-MacBook-Air"
   ];
-  nixosMachines = inputs.self.outputs.nixosConfigurations;
+  linuxMachines = inputs.self.outputs.nixosConfigurations;
+  darwinMachines = inputs.self.outputs.darwinConfigurations;
 
   textfileDir = "/var/lib/node-exporter-textfile";
   expectedCommitMetric = "comin_expected_commit_info";
@@ -35,7 +37,7 @@ in
               host = if name == config.networking.hostName then listenAddress else name;
             in
             "${host}:${toString port}"
-          ) (lib.filterAttrs (name: _: lib.elem name monitoredHosts) nixosMachines);
+          ) (lib.filterAttrs (name: _: lib.elem name monitoredHosts) (linuxMachines // darwinMachines));
         }
       ];
     }
