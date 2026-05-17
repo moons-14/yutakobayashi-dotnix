@@ -3,6 +3,7 @@
   config,
   pkgs,
   dotfilesDir,
+  osConfig,
   ...
 }:
 
@@ -11,6 +12,16 @@ let
   codexConfigDir = "${config.xdg.configHome}/codex";
   codexDotfilesDir = "${dotfilesDir}/codex";
   tomlFormat = pkgs.formats.toml { };
+  otelExporter =
+    if cfg.telemetry.enable then
+      {
+        "otlp-http" = {
+          endpoint = cfg.telemetry.endpoint;
+          protocol = "binary";
+        };
+      }
+    else
+      "none";
   settings = {
     approval_policy = "on-request";
     model = "gpt-5.5";
@@ -30,6 +41,12 @@ let
       url = "https://mcp.deepwiki.com/mcp";
     };
 
+    otel = {
+      environment = "${cfg.telemetry.environment}";
+      exporter = otelExporter;
+      log_user_prompt = cfg.telemetry.logUserPrompts;
+    };
+
     plugins = {
       "github@openai-curated".enabled = true;
       "browser-use@openai-bundled".enabled = true;
@@ -41,7 +58,35 @@ let
   codexConfig = tomlFormat.generate "codex-config" settings;
 in
 {
-  options.my.programs.codex.enable = lib.mkEnableOption "Codex";
+  options.my.programs.codex = {
+    enable = lib.mkEnableOption "Codex";
+
+    telemetry = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable Codex OTLP telemetry.";
+      };
+
+      endpoint = lib.mkOption {
+        type = lib.types.str;
+        default = "http://B450M-Pro4.tail29d068.ts.net:4318/v1/logs";
+        description = "OTLP HTTP endpoint for Codex telemetry.";
+      };
+
+      environment = lib.mkOption {
+        type = lib.types.str;
+        default = "home-${osConfig.networking.hostName or "unknown"}";
+        description = "OTel environment tag for Codex telemetry.";
+      };
+
+      logUserPrompts = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Forward raw user prompts in Codex telemetry.";
+      };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.llm-agents.codex ];
