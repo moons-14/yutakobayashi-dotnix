@@ -105,6 +105,7 @@ Both use [nix-output-monitor](https://github.com/maralorn/nix-output-monitor) fo
 - **IME**: fcitx5 + [hazkey](https://github.com/aster-void/nix-hazkey) (LLM-powered Japanese input)
 - **YubiKey**: PAM U2F authentication (polkit, swaylock)
 - **Development**: Docker, Tailscale, Android development environment, VirtualBox on UM790-Pro
+- **Self-hosted services**: Nextcloud, Immich, Gitea, Home Assistant on B450M-Pro4
 - **Agent microVMs**: Hermes Agent on UM790-Pro and OpenClaw on B450M-Pro4 via microvm.nix
 
 ### macOS

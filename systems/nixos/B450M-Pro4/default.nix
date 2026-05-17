@@ -11,6 +11,7 @@
     ../services/nextcloud
     ../services/immich
     ../services/gitea
+    ../services/home-assistant
     ../services/cloudflare-error-page
     ../services/openclaw
   ];
