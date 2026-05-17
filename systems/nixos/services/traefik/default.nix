@@ -50,6 +50,27 @@ in
             rule = "Host(`atuin.${domain}`)";
             service = "atuin";
           };
+          error-pages = {
+            entryPoints = [ "web" ];
+            rule = "HostRegexp(`{host:.+}`)";
+            priority = 1;
+            service = "error-pages-service";
+            middlewares = [ "error-pages" ];
+          };
+        };
+
+        middlewares = {
+          error-pages = {
+            errors = {
+              status = [
+                "500-599"
+                "404"
+                "403"
+              ];
+              query = "/{status}.html";
+              service = "error-pages-service";
+            };
+          };
         };
 
         services = {
@@ -65,6 +86,11 @@ in
           atuin.loadBalancer.servers = [
             { url = "http://localhost:${toString config.services.atuin.port}"; }
           ];
+          error-pages-service = {
+            loadBalancer = {
+              servers = [ { url = "http://127.0.0.1:5000"; } ];
+            };
+          };
         };
       };
     };
