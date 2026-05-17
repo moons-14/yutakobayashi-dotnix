@@ -19,6 +19,7 @@
     ../services/comin/prometheus.nix
     ../services/cloudflare-error-page
     ../services/openclaw
+    ../services/traefik
     ../services/atuin
   ];
 

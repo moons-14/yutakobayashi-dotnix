@@ -1,8 +1,7 @@
-{ config, lib, ... }:
+{ config, ... }:
 
 let
-  domain = "www.mod.gov.cn";
-  errorPagePort = 5000;
+  domain = "home.yutakobayashi.com";
 in
 {
   services.traefik = {
@@ -12,18 +11,7 @@ in
       entryPoints = {
         web = {
           address = ":80";
-          http.redirections.entrypoint = lib.mkForce null;
         };
-        websecure = {
-          address = ":443";
-          http.tls.certResolver = "letsencrypt";
-        };
-      };
-
-      certificatesResolvers.letsencrypt.acme = {
-        email = "hi@yutakobayashi.com";
-        storage = "${config.services.traefik.dataDir}/acme.json";
-        httpChallenge.entryPoint = "web";
       };
 
       api.dashboard = true;
@@ -31,60 +19,52 @@ in
 
     dynamicConfigOptions = {
       http = {
-        middlewares = {
-          redirect-to-https = {
-            redirectscheme = {
-              scheme = "https";
-              permanent = true;
-            };
-          };
-          error-pages = {
-            errors = {
-              status = [
-                "500-599"
-                "404"
-                "403"
-              ];
-              query = "/{status}.html";
-              service = "error-pages-service";
-            };
-          };
-        };
-
         routers = {
-          https-redirect = {
+          gitea = {
             entryPoints = [ "web" ];
-            rule = "HostRegexp(`{host:.+}`)";
-            middlewares = [ "redirect-to-https" ];
-            priority = 1;
-            service = "noop";
+            rule = "Host(`git.${domain}`)";
+            service = "gitea";
           };
-
-          "mitm-${domain}" = {
+          grafana = {
             entryPoints = [ "web" ];
-            rule = "Host(`${domain}`)";
-            priority = 100;
-            service = "mitmproxy";
-            middlewares = [ "error-pages" ];
+            rule = "Host(`grafana.${domain}`)";
+            service = "grafana";
+          };
+          nextcloud = {
+            entryPoints = [ "web" ];
+            rule = "Host(`cloud.${domain}`)";
+            service = "nextcloud";
+          };
+          immich = {
+            entryPoints = [ "web" ];
+            rule = "Host(`photos.${domain}`)";
+            service = "immich";
+          };
+          home-assistant = {
+            entryPoints = [ "web" ];
+            rule = "Host(`ha.${domain}`)";
+            service = "home-assistant";
+          };
+          atuin = {
+            entryPoints = [ "web" ];
+            rule = "Host(`atuin.${domain}`)";
+            service = "atuin";
           };
         };
 
         services = {
-          noop = {
-            loadBalancer = {
-              servers = [ { url = "http://127.0.0.1:1"; } ];
-            };
-          };
-          mitmproxy = {
-            loadBalancer = {
-              servers = [ { url = "http://127.0.0.1:8081"; } ];
-            };
-          };
-          error-pages-service = {
-            loadBalancer = {
-              servers = [ { url = "http://127.0.0.1:${toString errorPagePort}"; } ];
-            };
-          };
+          gitea.loadBalancer.servers = [ { url = "http://localhost:3000"; } ];
+          grafana.loadBalancer.servers = [
+            { url = "http://localhost:${toString config.services.grafana.settings.server.http_port}"; }
+          ];
+          nextcloud.loadBalancer.servers = [ { url = "http://localhost:80"; } ];
+          immich.loadBalancer.servers = [ { url = "http://localhost:2283"; } ];
+          home-assistant.loadBalancer.servers = [
+            { url = "http://localhost:${toString config.services.home-assistant.config.http.server_port}"; }
+          ];
+          atuin.loadBalancer.servers = [
+            { url = "http://localhost:${toString config.services.atuin.port}"; }
+          ];
         };
       };
     };
