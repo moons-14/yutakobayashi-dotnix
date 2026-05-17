@@ -57,7 +57,6 @@
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
-    openFirewall = true;
   };
 
   networking.networkmanager.ensureProfiles.profiles.home-wifi = {

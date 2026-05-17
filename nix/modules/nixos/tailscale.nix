@@ -1,4 +1,5 @@
 { config, lib, ... }:
+
 let
   cfg = config.my.services.tailscale;
 in
@@ -6,23 +7,40 @@ in
   options.my.services.tailscale = {
     enable = lib.mkEnableOption "Tailscale VPN";
 
-    acceptDns = lib.mkOption {
+    configureResolver = lib.mkOption {
       type = lib.types.bool;
       default = false;
-    };
-
-    acceptRoutes = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
+      description = "Enable systemd-resolved for Tailscale DNS (desktop systems).";
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    services.tailscale = {
-      enable = true;
-      extraUpFlags =
-        lib.optional (!cfg.acceptDns) "--accept-dns=false"
-        ++ lib.optional cfg.acceptRoutes "--accept-routes";
-    };
-  };
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        services.tailscale = {
+          enable = true;
+          useRoutingFeatures = "server";
+          authKeyFile = config.sops.secrets.tailscale-authkey.path;
+          extraUpFlags = [ "--ssh" ];
+        };
+
+        networking = {
+          firewall = {
+            trustedInterfaces = [ "tailscale0" ];
+            allowedUDPPorts = [ config.services.tailscale.port ];
+          };
+          nameservers = [
+            "100.100.100.100"
+            "8.8.8.8"
+          ];
+          search = [ "tail29d068.ts.net" ];
+        };
+
+        sops.secrets.tailscale-authkey = { };
+      }
+      (lib.mkIf cfg.configureResolver {
+        services.resolved.enable = true;
+      })
+    ]
+  );
 }

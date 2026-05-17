@@ -32,7 +32,6 @@
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
-    openFirewall = true;
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

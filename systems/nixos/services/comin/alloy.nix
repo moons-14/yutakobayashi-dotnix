@@ -11,7 +11,7 @@ in
     configs.comin = ''
       loki.write "default" {
         endpoint {
-          url = "http://B450M-Pro4:${toString lokiPort}/loki/api/v1/push"
+          url = "http://B450M-Pro4.tail29d068.ts.net:${toString lokiPort}/loki/api/v1/push"
         }
       }
 

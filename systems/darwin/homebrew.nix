@@ -47,7 +47,6 @@
       "elgato-stream-deck"
       "gpg-suite"
       "orbstack"
-      "tailscale-app"
       "blackhole-2ch"
       "nani"
       "telegram"

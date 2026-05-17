@@ -23,5 +23,7 @@
 
   networking.hostName = "X870-Stell-Legend-WiFi";
 
+  my.services.tailscale.enable = false;
+
   system.stateVersion = "25.11";
 }

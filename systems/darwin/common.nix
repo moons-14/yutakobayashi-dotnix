@@ -13,6 +13,20 @@
     inputs.sops-nix.darwinModules.sops
   ];
 
+  sops = {
+    defaultSopsFile = ../../secrets/default.yaml;
+    age = {
+      keyFile = "/Users/${username}/.config/sops/age/keys.txt";
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      generateKey = true;
+    };
+  };
+
+  services.tailscale = {
+    enable = true;
+    overrideLocalDns = true;
+  };
+
   services.comin = {
     enable = true;
     remotes = [

@@ -6,7 +6,6 @@
 
   services.comin = {
     enable = true;
-    exporter.openFirewall = true;
     remotes = [
       {
         name = "origin";

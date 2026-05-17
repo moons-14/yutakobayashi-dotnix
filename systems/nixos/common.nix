@@ -15,7 +15,16 @@
     ../../nix/modules/nixos
   ];
 
-  sops.age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
+  sops = {
+    defaultSopsFile = ../../secrets/default.yaml;
+    age = {
+      keyFile = "/home/${username}/.config/sops/age/keys.txt";
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      generateKey = true;
+    };
+  };
+
+  my.services.tailscale.enable = true;
 
   nix.gc.dates = "weekly";
 
