@@ -30,9 +30,17 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "B450M-Pro4";
-  networking.networkmanager.enable = true;
-  networking.useDHCP = lib.mkDefault true;
+  networking = {
+    hostName = "B450M-Pro4";
+    useDHCP = lib.mkDefault true;
+    wireless = {
+      enable = true;
+      secretsFile = config.sops.secrets.wifi.path;
+      networks."TP-Link_42B4_5G".pskRaw = "ext:home";
+    };
+  };
+
+  sops.secrets.wifi = { };
 
   services.prometheus.exporters.node = {
     enable = true;
