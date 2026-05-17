@@ -13,8 +13,10 @@
   - `~/.config/claude/skills`
   - `~/.config/codex/skills`
   - Hermes microVM: `/var/lib/hermes/.hermes/skills`
+  - OpenClaw microVM: `/persist/openclaw/.openclaw/workspace/skills`
 
 Hermes microVM 向けのスキルは `systems/nixos/services/hermes-agent/guest.nix` で個別に bundle 化し、シンボリックリンクではなく実体コピーで配置します。
+OpenClaw microVM は `systems/nixos/services/openclaw/guest.nix` で `nix-openclaw` の bundled plugins を宣言し、workspace documents は `systems/nixos/services/openclaw/documents/` を正本にします。
 
 ## スキルの追加
 

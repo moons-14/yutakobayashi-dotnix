@@ -39,6 +39,10 @@
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
     nix-steipete-tools.url = "github:openclaw/nix-steipete-tools";
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     gh-nippou = {
       url = "github:ryoppippi/gh-nippou";
       inputs.nixpkgs.follows = "nixpkgs";

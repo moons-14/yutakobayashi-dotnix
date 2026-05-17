@@ -12,6 +12,7 @@
     ../services/immich
     ../services/gitea
     ../services/cloudflare-error-page
+    ../services/openclaw
   ];
 
   boot.loader.systemd-boot.enable = true;
