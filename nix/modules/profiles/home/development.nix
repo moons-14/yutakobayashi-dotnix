@@ -10,6 +10,7 @@
     ../../home/coding-agents/copilot-cli
     ../../home/coding-agents/cursor-agent
     ../../home/coding-agents/entire
+    ../../home/coding-agents/grok
     ../../home/coding-agents/opencode
     ../../home/coding-agents/spec-kit
     ../../home/coding-agents/vibe-kanban
@@ -25,6 +26,7 @@
   my.programs.copilot-cli.enable = true;
   my.programs.cursor-agent.enable = true;
   my.programs.entire.enable = true;
+  my.programs.grok.enable = true;
   my.programs.opencode.enable = true;
   my.programs.spec-kit.enable = true;
   my.programs.vibe-kanban.enable = true;
