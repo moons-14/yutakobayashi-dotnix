@@ -17,6 +17,7 @@
     ../services/prometheus
     ../services/loki
     ../services/opentelemetry-collector
+    ../services/oura-metrics
     ../services/comin
     ../services/comin/prometheus.nix
     ../services/cloudflare-error-page
