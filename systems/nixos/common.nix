@@ -10,6 +10,7 @@
   # decide whether the machine is desktop, server, or WSL.
   imports = [
     ../common.nix
+    inputs.comin.nixosModules.comin
     inputs.sops-nix.nixosModules.sops
     ../../nix/modules/nixos
   ];

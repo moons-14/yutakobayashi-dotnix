@@ -11,6 +11,7 @@
   imports = [
     ../common.nix
     ../services/hermes-agent
+    ../services/comin
     (modulesPath + "/installer/scan/not-detected.nix")
     ./virtualbox.nix
     ../desktop.nix
@@ -52,6 +53,13 @@
   networking.networkmanager.enable = true;
   networking.useDHCP = lib.mkDefault true;
   networking.resolvconf.enable = false;
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    enabledCollectors = [ "systemd" ];
+    openFirewall = true;
+  };
+
   networking.networkmanager.ensureProfiles.profiles.home-wifi = {
     connection = {
       id = "TP-Link_42B4_5G";

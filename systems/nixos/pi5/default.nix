@@ -7,6 +7,7 @@
 {
   imports = [
     ../common.nix
+    ../services/comin
     inputs.nixos-hardware.nixosModules.raspberry-pi-5
   ];
 
@@ -28,6 +29,12 @@
 
   networking.hostName = "pi5";
   networking.useDHCP = lib.mkDefault true;
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    enabledCollectors = [ "systemd" ];
+    openFirewall = true;
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
   system.stateVersion = "25.11";

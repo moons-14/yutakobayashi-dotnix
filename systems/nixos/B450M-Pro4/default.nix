@@ -12,6 +12,11 @@
     ../services/immich
     ../services/gitea
     ../services/home-assistant
+    ../services/grafana
+    ../services/prometheus
+    ../services/loki
+    ../services/comin
+    ../services/comin/prometheus.nix
     ../services/cloudflare-error-page
     ../services/openclaw
   ];
@@ -22,6 +27,12 @@
   networking.hostName = "B450M-Pro4";
   networking.networkmanager.enable = true;
   networking.useDHCP = lib.mkDefault true;
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    enabledCollectors = [ "systemd" ];
+    openFirewall = true;
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
