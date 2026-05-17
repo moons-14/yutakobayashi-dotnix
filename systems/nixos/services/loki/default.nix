@@ -51,6 +51,7 @@ in
           action = "index_label";
           attributes = [
             "account_name"
+            "deployment.environment"
             "team"
             "role"
             "service.name"

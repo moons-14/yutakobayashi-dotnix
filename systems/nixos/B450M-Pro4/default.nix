@@ -16,7 +16,7 @@
     ../services/grafana
     ../services/prometheus
     ../services/loki
-    ../services/claude-code-telemetry
+    ../services/opentelemetry-collector
     ../services/comin
     ../services/comin/prometheus.nix
     ../services/cloudflare-error-page
