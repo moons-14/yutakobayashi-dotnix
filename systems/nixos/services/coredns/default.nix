@@ -1,7 +1,10 @@
 { config, lib, ... }:
 
 let
-  domain = "www.mod.gov.cn";
+  mitmDomain = "www.mod.gov.cn";
+  homeDomain = "home.yutakobayashi.com";
+  tailDomain = "tail29d068.ts.net";
+  b450m = "100.64.0.1";
 in
 {
   services.coredns = {
@@ -12,12 +15,37 @@ in
         log
         errors
       }
-      ${domain}:53 {
+
+      ${tailDomain}:53 {
+        forward . 100.100.100.100
+        log
+        errors
+      }
+
+      ${homeDomain}:53 {
+        template ANY A {
+          match "(.*)\.${homeDomain}"
+          answer "{{ .Name }} 300 IN A ${b450m}"
+          fallthrough
+        }
+        template ANY AAAA {
+          match "(.*)\.${homeDomain}"
+          fallthrough
+        }
+        forward . 8.8.8.8 1.1.1.1
+        log
+        errors
+      }
+
+      ${mitmDomain}:53 {
         hosts {
-          ${domain} ${config.networking.hostName}
+          ${mitmDomain} ${config.networking.hostName}
         }
         log
       }
     '';
   };
+
+  networking.firewall.allowedTCPPorts = [ 53 ];
+  networking.firewall.allowedUDPPorts = [ 53 ];
 }

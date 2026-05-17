@@ -21,6 +21,7 @@
     ../services/openclaw
     ../services/traefik
     ../services/atuin
+    ../services/coredns
   ];
 
   boot.loader.systemd-boot.enable = true;
