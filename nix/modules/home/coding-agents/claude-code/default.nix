@@ -4,6 +4,7 @@
   pkgs,
   inputs,
   dotfilesDir,
+  osConfig,
   ...
 }:
 
@@ -18,6 +19,23 @@ let
   rtk = lib.getExe rtkPackage;
   rtkHookPath = "${homeDirectory}/.claude/hooks/rtk-rewrite.sh";
   jsonFormat = pkgs.formats.json { };
+  boolString = value: if value then "1" else "0";
+  telemetryResourceAttributes = cfg.telemetry.resourceAttributes // {
+    account_name = config.home.username;
+    "service.name" = "claude-code";
+    "host.name" = osConfig.networking.hostName or "unknown";
+  };
+  telemetryEnv = lib.optionalAttrs cfg.telemetry.enable {
+    OTEL_METRICS_EXPORTER = "otlp";
+    OTEL_LOGS_EXPORTER = "otlp";
+    OTEL_EXPORTER_OTLP_PROTOCOL = "http/protobuf";
+    OTEL_EXPORTER_OTLP_ENDPOINT = cfg.telemetry.endpoint;
+    OTEL_METRIC_EXPORT_INTERVAL = "10000";
+    OTEL_LOG_USER_PROMPTS = boolString cfg.telemetry.logUserPrompts;
+    OTEL_RESOURCE_ATTRIBUTES = lib.concatStringsSep "," (
+      lib.mapAttrsToList (name: value: "${name}=${value}") telemetryResourceAttributes
+    );
+  };
 
   terminal-notifier =
     if pkgs.stdenv.isDarwin then lib.getExe' pkgs.terminal-notifier "terminal-notifier" else "";
@@ -45,7 +63,7 @@ let
       CLAUDE_CODE_MAX_OUTPUT_TOKENS = "32000";
       CLAUDE_CODE_AUTO_CONNECT_IDE = "0";
       CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
-      CLAUDE_CODE_ENABLE_TELEMETRY = "0";
+      CLAUDE_CODE_ENABLE_TELEMETRY = boolString cfg.telemetry.enable;
       CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL = "1";
       CLAUDE_CODE_IDE_SKIP_VALID_CHECK = "1";
       DISABLE_AUTOUPDATER = "1";
@@ -53,13 +71,14 @@ let
       DISABLE_INTERLEAVED_THINKING = "1";
       DISABLE_MICROCOMPACT = "1";
       DISABLE_NON_ESSENTIAL_MODEL_CALLS = "1";
-      DISABLE_TELEMETRY = "1";
+      DISABLE_TELEMETRY = boolString (!cfg.telemetry.enable);
       CLAUDE_CODE_EFFORT_LEVEL = "max";
       ENABLE_EXPERIMENTAL_MCP_CLI = "false";
       ENABLE_TOOL_SEARCH = "true";
       CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
       IS_DEMO = "1";
-    };
+    }
+    // telemetryEnv;
 
     enabledPlugins = {
       "gopls-lsp@claude-plugins-official" = true;
@@ -222,7 +241,39 @@ let
   claudeSettings = jsonFormat.generate "claude-settings.json" settings;
 in
 {
-  options.my.programs.claude-code.enable = lib.mkEnableOption "Claude Code";
+  options.my.programs.claude-code = {
+    enable = lib.mkEnableOption "Claude Code";
+
+    telemetry = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable Claude Code OTLP telemetry.";
+      };
+
+      endpoint = lib.mkOption {
+        type = lib.types.str;
+        default = "http://B450M-Pro4.tail29d068.ts.net:4318";
+        description = "OTLP HTTP endpoint for Claude Code telemetry.";
+      };
+
+      logUserPrompts = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Forward raw user prompts in Claude Code telemetry.";
+      };
+
+      resourceAttributes = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = {
+          "deployment.environment" = "home";
+          role = "developer";
+          team = "personal";
+        };
+        description = "OTel resource attributes attached to Claude Code telemetry.";
+      };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs.llm-agents; [

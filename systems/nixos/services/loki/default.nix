@@ -46,6 +46,17 @@ in
         delete_request_store = "filesystem";
       };
       limits_config.retention_period = "720h";
+      limits_config.otlp_config.resource_attributes.attributes_config = [
+        {
+          action = "index_label";
+          attributes = [
+            "account_name"
+            "team"
+            "role"
+            "service.name"
+          ];
+        }
+      ];
       analytics.reporting_enabled = false;
       ruler.enable_api = false;
     };
