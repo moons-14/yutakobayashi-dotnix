@@ -40,6 +40,7 @@
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   hardware.px4_drv.enable = true;
+  hardware.rtl8812au.enable = true;
 
   hardware.nvidia = {
     open = true;
