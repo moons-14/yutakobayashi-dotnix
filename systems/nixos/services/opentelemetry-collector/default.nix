@@ -54,7 +54,7 @@ in
 
   services.prometheus.scrapeConfigs = [
     {
-      job_name = "claude-code-otel";
+      job_name = "otel-collector";
       static_configs = [
         { targets = [ "127.0.0.1:${toString prometheusPort}" ]; }
       ];
