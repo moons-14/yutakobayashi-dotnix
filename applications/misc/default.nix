@@ -61,6 +61,8 @@ in
       yazi
       imagemagick
       ffmpeg
+      apkeep
+      ipatool
       stable.yt-dlp
       halloy
       immich-go
