@@ -17,6 +17,7 @@
       { id = "nkbihfbeogaeaoehlefnkodbefgpgknn"; } # MetaMask
       { id = "nibjojkomfdiaoajekhjakgkdhaomnch"; } # IPFS Companion
       { id = "neebplgakaahbhdphmkckjjcegoiijjo"; } # Keepa
+      { id = "kpffakljoffeckbckheiheogajnofdpc"; } # Amazonの個人情報を隠します
     ];
   };
 }
