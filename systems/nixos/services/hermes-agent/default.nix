@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    ./alloy.nix
     inputs.microvm.nixosModules.host
   ];
 

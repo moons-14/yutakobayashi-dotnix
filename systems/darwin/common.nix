@@ -8,6 +8,7 @@
 {
   imports = [
     ../common.nix
+    ../shared/comin/alloy.nix
     ../../nix/modules/darwin
     inputs.comin.darwinModules.comin
     inputs.sops-nix.darwinModules.sops

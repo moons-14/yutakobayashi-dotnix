@@ -1,7 +1,7 @@
 {
   imports = [
     ../alloy
-    ./alloy.nix
+    ../../../shared/comin/alloy.nix
   ];
 
   services.comin = {
