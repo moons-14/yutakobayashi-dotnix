@@ -50,6 +50,11 @@ in
             rule = "Host(`atuin.${domain}`)";
             service = "atuin";
           };
+          archivebox = {
+            entryPoints = [ "web" ];
+            rule = "Host(`archive.${domain}`)";
+            service = "archivebox";
+          };
           error-pages = {
             entryPoints = [ "web" ];
             rule = "HostRegexp(`{host:.+}`)";
@@ -86,6 +91,7 @@ in
           atuin.loadBalancer.servers = [
             { url = "http://localhost:${toString config.services.atuin.port}"; }
           ];
+          archivebox.loadBalancer.servers = [ { url = "http://127.0.0.1:8000"; } ];
           error-pages-service = {
             loadBalancer = {
               servers = [ { url = "http://127.0.0.1:5000"; } ];
