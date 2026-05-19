@@ -8,7 +8,6 @@
     taps = [
       "blacktop/tap"
       "manaflow-ai/cmux"
-      "steipete/tap"
       "trasta298/tap"
     ];
     brews = [
@@ -26,7 +25,6 @@
       "automake"
       "pkg-config"
       "libtool"
-      "git-lfs"
       "cmake"
       "python@3.13"
       "ideviceinstaller"
@@ -37,7 +35,6 @@
       "libtatsu"
       "libusbmuxd"
       "ca-certificates"
-      "wget"
     ];
     casks = [
       # System Integration

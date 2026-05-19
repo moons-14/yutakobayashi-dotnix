@@ -11,7 +11,11 @@
 
   home.packages =
     with pkgs;
-    lib.optionals pkgs.stdenv.isLinux [
+    [
+      # AI / LLM
+      lmstudio
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
       # Overlay packages
       ghostty
       keifu
@@ -61,9 +65,6 @@
       difit
       binutils
       arp-scan
-
-      # AI / LLM
-      lmstudio
 
       # Misc
       cava
